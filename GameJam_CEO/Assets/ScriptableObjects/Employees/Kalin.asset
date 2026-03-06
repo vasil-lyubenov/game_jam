@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Kalin
   m_EditorClassIdentifier: Assembly-CSharp::CEOGame.Data.EmployeeData
   employeeName: "\u041A\u0430\u043B\u0438\u043D"
-  portrait: {fileID: 0}
+  portrait: {fileID: -1667650490425545564, guid: 90a20a0950de24c2e8419b26fbb06b72, type: 3}
   personalityBio: "\u0421\u0430\u043C\u043E\u0443\u0432\u0435\u0440\u0435\u043D.
     \u0427\u0435\u0441\u0442\u043E \u0438\u0434\u0432\u0430 '\u0441\u043B\u0435\u0434
     \u0442\u0435\u0436\u043A\u0430 \u0432\u0435\u0447\u0435\u0440'."

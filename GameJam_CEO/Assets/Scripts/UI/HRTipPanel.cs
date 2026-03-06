@@ -7,7 +7,7 @@ namespace CEOGame.UI
 {
     public class HRTipPanel : MonoBehaviour
     {
-        public TMP_Text employeeNameText;
+        // public TMP_Text employeeNameText;
         public TMP_Text tipsRemainingText;
         public Button useTipButton;
 
@@ -23,7 +23,7 @@ namespace CEOGame.UI
 
         public void ShowEmployee(EmployeeData employee, int tipsRemaining)
         {
-            employeeNameText.text = employee.employeeName;
+            // employeeNameText.text = employee.employeeName;
             tipsRemainingText.text = $"Tips: {tipsRemaining}";
             HideTipBubble();
             useTipButton.interactable = tipsRemaining > 0 && !string.IsNullOrEmpty(employee.hrTip);

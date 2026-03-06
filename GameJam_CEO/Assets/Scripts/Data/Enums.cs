@@ -7,7 +7,8 @@ namespace CEOGame.Data
         Design,
         QA,
         Marketing,
-        Management
+        Management,
+        Janitor
     }
 
     public enum Position
@@ -44,5 +45,13 @@ namespace CEOGame.Data
         Slacker,
         Visionary,
         Hothead
+    }
+
+    public enum EndingType
+    {
+        VeryBad,
+        Bad,
+        Neutral,
+        Good
     }
 }

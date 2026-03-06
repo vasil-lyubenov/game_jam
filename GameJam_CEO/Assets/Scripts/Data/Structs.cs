@@ -34,4 +34,13 @@ namespace CEOGame.Data
         [TextArea(2, 4)]
         public string outcomeText;
     }
+
+    [Serializable]
+    public struct DelayedEffect
+    {
+        public int turnsRemaining;
+        public int budgetChange;
+        public int moraleChange;
+        public RequestData sourceRequest;
+    }
 }

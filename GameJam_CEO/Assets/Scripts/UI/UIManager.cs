@@ -28,6 +28,10 @@ namespace CEOGame.UI
         public Button menuButton;
         public PauseMenuPanel pauseMenuPanel;
 
+        [Header("Panel Toggle Buttons")]
+        public Button charshaButton;
+        public Button vizitkaButton;
+
         [Header("HR Tip")]
         public HRTipPanel hrTipPanel;
 
@@ -55,6 +59,8 @@ namespace CEOGame.UI
             requestPanel.denyButton.onClick.AddListener(() => OnPlayerDecision(false));
             hrTipPanel.useTipButton.onClick.AddListener(OnHRTipClicked);
             menuButton.onClick.AddListener(OnMenuClicked);
+            charshaButton.onClick.AddListener(() => companyPanel.Toggle());
+            vizitkaButton.onClick.AddListener(() => employeeInfoPanel.Toggle());
 
             // Initialize display
             timerDisplay.SetMaxTime(turnManager.dayDuration);

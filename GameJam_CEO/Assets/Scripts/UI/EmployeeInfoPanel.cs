@@ -7,6 +7,16 @@ namespace CEOGame.UI
     public class EmployeeInfoPanel : MonoBehaviour
     {
         public TMP_Text nameText;
+
+        void Awake()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void Toggle()
+        {
+            gameObject.SetActive(!gameObject.activeSelf);
+        }
         public TMP_Text teamText;
         public TMP_Text positionText;
         public TMP_Text salaryText;

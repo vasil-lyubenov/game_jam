@@ -3035,6 +3035,7 @@ MonoBehaviour:
   vizitkaButton: {fileID: 6415049785391288452}
   environmentDisplay: {fileID: 773327809211096810}
   dayCycleManager: {fileID: 4962821870640226779}
+  employeeAnimator: {fileID: 1200838845944981127}
 --- !u!114 &5229257481422925119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3048,8 +3049,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CEOGame.Core.GameState
   allEmployees: []
-  budget: 1000
-  morale: 70
+  budget: 100000
+  morale: 80
   people: 30
   gameOver: 0
   approvedRequests: []
@@ -3245,6 +3246,10 @@ PrefabInstance:
     - target: {fileID: 1505047255180401572, guid: 3a4d50a017d0c421fba07b85c2155926, type: 3}
       propertyPath: m_fontSize
       value: 72
+      objectReference: {fileID: 0}
+    - target: {fileID: 1505047255180401572, guid: 3a4d50a017d0c421fba07b85c2155926, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1505047255180401572, guid: 3a4d50a017d0c421fba07b85c2155926, type: 3}
       propertyPath: m_VerticalAlignment

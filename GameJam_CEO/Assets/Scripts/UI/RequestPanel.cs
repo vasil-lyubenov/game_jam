@@ -47,7 +47,6 @@ namespace CEOGame.UI
             dialogueText.text = lines != null && lines.Length > 0 ? lines[currentLine] : "";
 
             bool isLast = lines == null || lines.Length == 0 || currentLine >= lines.Length - 1;
-            nextButton.gameObject.SetActive(!isLast);
             approveButton.gameObject.SetActive(isLast);
             denyButton.gameObject.SetActive(isLast);
         }
@@ -63,8 +62,8 @@ namespace CEOGame.UI
         {
             approveButton.interactable = false;
             denyButton.interactable = false;
-            nextButton.gameObject.SetActive(false);
-            // outcomeText.text = text;
+            //nextButton.gameObject.SetActive(false);
+            //outcomeText.text = text;
         }
 
         public void Clear()

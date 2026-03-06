@@ -36,10 +36,14 @@ namespace CEOGame.UI
         public EnvironmentDisplay environmentDisplay;
         public DayCycleManager dayCycleManager;
 
+        [Header("Employee Animation")]
+        public EmployeeAnimator employeeAnimator;
+
         [Header("HR Tip")]
         // public HRTipPanel hrTipPanel;
 
         RequestData currentRequest;
+        RequestData pendingRequest;
 
         void Start()
         {
@@ -56,6 +60,12 @@ namespace CEOGame.UI
             decisionProcessor.OnDecisionProcessed += OnDecisionProcessed;
 
             hrTipSystem.OnTipUsed += OnTipUsed;
+
+            if (employeeAnimator != null)
+            {
+                employeeAnimator.OnWalkInComplete += OnWalkInComplete;
+                employeeAnimator.OnWalkOutComplete += OnWalkOutComplete;
+            }
 
             // Button listeners
             requestPanel.approveButton.onClick.AddListener(() => OnPlayerDecision(true));
@@ -99,12 +109,32 @@ namespace CEOGame.UI
 
         void OnRequestServed(RequestData request)
         {
-            currentRequest = request;
-            requestPanel.ShowRequest(request);
-            employeeInfoPanel.ShowEmployee(request.requestingEmployee, request);
-            companyPanel.ShowForEmployee(request.requestingEmployee);
-            // hrTipPanel.ShowEmployee(request.requestingEmployee, hrTipSystem.tipsRemaining);
-            // hrTipPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people, hrTipSystem.tipsRemaining);
+            pendingRequest = request;
+
+            if (employeeAnimator != null)
+            {
+                employeeAnimator.SetEmployeeSprite(request.requestingEmployee.portrait);
+                employeeAnimator.PlayWalkIn();
+            }
+            else
+            {
+                ShowPendingRequest();
+            }
+        }
+
+        void OnWalkInComplete()
+        {
+            ShowPendingRequest();
+        }
+
+        void ShowPendingRequest()
+        {
+            if (pendingRequest == null) return;
+            currentRequest = pendingRequest;
+            pendingRequest = null;
+            requestPanel.ShowRequest(currentRequest);
+            employeeInfoPanel.ShowEmployee(currentRequest.requestingEmployee, currentRequest);
+            companyPanel.ShowForEmployee(currentRequest.requestingEmployee);
         }
 
         void OnNoMoreRequests()
@@ -121,12 +151,26 @@ namespace CEOGame.UI
         void OnDecisionProcessed(RequestData request, DecisionOutcome outcome)
         {
             requestPanel.ShowOutcome(outcome.outcomeText);
-            StartCoroutine(ShowOutcomeThenNext());
+            StartCoroutine(ShowOutcomeThenWalkOut());
         }
 
-        IEnumerator ShowOutcomeThenNext()
+        IEnumerator ShowOutcomeThenWalkOut()
         {
             yield return new WaitForSeconds(2f);
+
+            if (employeeAnimator != null)
+            {
+                employeeAnimator.PlayWalkOut();
+            }
+            else
+            {
+                requestManager.ServeNextRequest();
+            }
+        }
+
+        void OnWalkOutComplete()
+        {
+            requestPanel.Clear();
             requestManager.ServeNextRequest();
         }
 
@@ -183,6 +227,11 @@ namespace CEOGame.UI
                 decisionProcessor.OnDecisionProcessed -= OnDecisionProcessed;
             if (hrTipSystem != null)
                 hrTipSystem.OnTipUsed -= OnTipUsed;
+            if (employeeAnimator != null)
+            {
+                employeeAnimator.OnWalkInComplete -= OnWalkInComplete;
+                employeeAnimator.OnWalkOutComplete -= OnWalkOutComplete;
+            }
         }
     }
 }

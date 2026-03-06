@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,8 @@ namespace CEOGame.Core
         public event Action OnWalkInComplete;
         public event Action OnWalkOutComplete;
 
+        Coroutine waitRoutine;
+
         public void SetEmployeeSprite(Sprite sprite)
         {
             if (employeeImage != null && sprite != null)
@@ -22,24 +25,39 @@ namespace CEOGame.Core
 
         public void PlayWalkIn()
         {
+            if (waitRoutine != null) StopCoroutine(waitRoutine);
             animator.SetTrigger("walk_in");
+            waitRoutine = StartCoroutine(WaitForClipEnd(() => OnWalkInComplete?.Invoke()));
         }
 
         public void PlayWalkOut()
         {
+            if (waitRoutine != null) StopCoroutine(waitRoutine);
             animator.SetTrigger("walk_out");
+            waitRoutine = StartCoroutine(WaitForClipEnd(() => OnWalkOutComplete?.Invoke()));
         }
 
-        // Called by Animation Event at end of walk-in clip
-        public void WalkInFinished()
+        IEnumerator WaitForClipEnd(Action callback)
         {
-            OnWalkInComplete?.Invoke();
-        }
+            // Wait a frame for the trigger to be consumed and transition to start
+            yield return null;
+            yield return null;
 
-        // Called by Animation Event at end of walk-out clip
-        public void WalkOutFinished()
-        {
-            OnWalkOutComplete?.Invoke();
+            // Now get the current clip length from the state info
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+            float clipDuration = 4.5f;
+
+            // Fallback: if length is 0 or very small, use a reasonable default
+            if (clipDuration <= 0.01f)
+            {
+                clipDuration = 4.5f;
+            }
+
+            // Wait for the clip duration to elapse
+            yield return new WaitForSeconds(clipDuration);
+
+            waitRoutine = null;
+            callback?.Invoke();
         }
     }
 }

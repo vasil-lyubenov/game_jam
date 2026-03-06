@@ -25,16 +25,26 @@ namespace CEOGame.Core
 
         public void PlayWalkIn()
         {
+            Debug.Log("[EmployeeAnimator] PlayWalkIn");
             if (waitRoutine != null) StopCoroutine(waitRoutine);
             animator.SetTrigger("walk_in");
-            waitRoutine = StartCoroutine(WaitForClipEnd(() => OnWalkInComplete?.Invoke()));
+            waitRoutine = StartCoroutine(WaitForClipEnd(() =>
+            {
+                Debug.Log("[EmployeeAnimator] WalkIn complete, invoking callback");
+                OnWalkInComplete?.Invoke();
+            }));
         }
 
         public void PlayWalkOut()
         {
+            Debug.Log("[EmployeeAnimator] PlayWalkOut");
             if (waitRoutine != null) StopCoroutine(waitRoutine);
             animator.SetTrigger("walk_out");
-            waitRoutine = StartCoroutine(WaitForClipEnd(() => OnWalkOutComplete?.Invoke()));
+            waitRoutine = StartCoroutine(WaitForClipEnd(() =>
+            {
+                Debug.Log("[EmployeeAnimator] WalkOut complete, invoking callback");
+                OnWalkOutComplete?.Invoke();
+            }));
         }
 
         IEnumerator WaitForClipEnd(Action callback)

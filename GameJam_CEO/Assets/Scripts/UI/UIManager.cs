@@ -68,12 +68,24 @@ namespace CEOGame.UI
             }
 
             // Button listeners
-            requestPanel.approveButton.onClick.AddListener(() => OnPlayerDecision(true));
-            requestPanel.denyButton.onClick.AddListener(() => OnPlayerDecision(false));
+            requestPanel.approveButton.onClick.AddListener(() => {
+                AudioManager.Instance?.PlayApprove();
+                OnPlayerDecision(true);
+            });
+            requestPanel.denyButton.onClick.AddListener(() => {
+                AudioManager.Instance?.PlayDeny();
+                OnPlayerDecision(false);
+            });
             // hrTipPanel.useTipButton.onClick.AddListener(OnHRTipClicked);
             menuButton.onClick.AddListener(OnMenuClicked);
-            charshaButton.onClick.AddListener(() => companyPanel.Toggle());
-            vizitkaButton.onClick.AddListener(() => employeeInfoPanel.Toggle());
+            charshaButton.onClick.AddListener(() => {
+                AudioManager.Instance?.PlayCompanySheet();
+                companyPanel.Toggle();
+            });
+            vizitkaButton.onClick.AddListener(() => {
+                AudioManager.Instance?.PlayCardPickup();
+                employeeInfoPanel.Toggle();
+            });
 
             // Initialize display
             if (environmentDisplay != null)
@@ -103,12 +115,20 @@ namespace CEOGame.UI
 
         void OnTimeUp()
         {
-            //companyPanel.AddLogEntry("--- Day ended ---");
+            // Skip to last dialogue line and show approve/deny buttons
+            requestPanel.SkipToLastLine();
+
+            // Disable all UI except approve/deny
+            requestPanel.nextButton.gameObject.SetActive(false);
+            charshaButton.interactable = false;
+            vizitkaButton.interactable = false;
+            menuButton.interactable = false;
         }
         void OnDayEnded() { }
 
         void OnRequestServed(RequestData request)
         {
+            Debug.Log($"[UIManager] OnRequestServed: request={request.name}");
             pendingRequest = request;
 
             if (employeeAnimator != null)
@@ -124,6 +144,7 @@ namespace CEOGame.UI
 
         void OnWalkInComplete()
         {
+            Debug.Log("[UIManager] OnWalkInComplete");
             ShowPendingRequest();
         }
 
@@ -132,6 +153,15 @@ namespace CEOGame.UI
             if (pendingRequest == null) return;
             currentRequest = pendingRequest;
             pendingRequest = null;
+
+            // Re-enable UI buttons for the new request
+            charshaButton.interactable = true;
+            vizitkaButton.interactable = true;
+            menuButton.interactable = true;
+
+            // Reset per-request timer
+            turnManager.ResetTimer();
+
             requestPanel.ShowRequest(currentRequest);
             employeeInfoPanel.ShowEmployee(currentRequest.requestingEmployee, currentRequest);
             companyPanel.ShowForEmployee(currentRequest.requestingEmployee);
@@ -139,24 +169,39 @@ namespace CEOGame.UI
 
         void OnNoMoreRequests()
         {
+            Debug.Log("[UIManager] OnNoMoreRequests");
             requestPanel.Clear();
         }
 
         void OnPlayerDecision(bool approved)
         {
             if (currentRequest == null) return;
+            Debug.Log($"[UIManager] OnPlayerDecision: approved={approved}, request={currentRequest.name}");
+
+            // Re-enable UI buttons after decision
+            charshaButton.interactable = true;
+            vizitkaButton.interactable = true;
+            menuButton.interactable = true;
+
+            // Stop timer (will be reset on next request)
+            turnManager.Pause();
+
             decisionProcessor.ProcessDecision(currentRequest, approved);
         }
 
         void OnDecisionProcessed(RequestData request, DecisionOutcome outcome)
         {
+            Debug.Log($"[UIManager] OnDecisionProcessed: request={request.name}, gameOver={gameState.gameOver}");
             requestPanel.ShowOutcome(outcome.outcomeText);
+            currentRequest = null;
             StartCoroutine(ShowOutcomeThenWalkOut());
         }
 
         IEnumerator ShowOutcomeThenWalkOut()
         {
+            Debug.Log("[UIManager] ShowOutcomeThenWalkOut: waiting 2s...");
             yield return new WaitForSeconds(2f);
+            Debug.Log("[UIManager] ShowOutcomeThenWalkOut: wait complete, starting walk out");
 
             if (employeeAnimator != null)
             {
@@ -164,13 +209,25 @@ namespace CEOGame.UI
             }
             else
             {
-                requestManager.ServeNextRequest();
+                OnWalkOutComplete();
             }
         }
 
         void OnWalkOutComplete()
         {
+            Debug.Log($"[UIManager] OnWalkOutComplete: gameOver={gameState.gameOver}");
             requestPanel.Clear();
+
+            // Hide toggle panels between requests
+            employeeInfoPanel.gameObject.SetActive(false);
+            companyPanel.gameObject.SetActive(false);
+
+            if (gameState.gameOver)
+            {
+                Debug.Log("[UIManager] Game over — skipping ServeNextRequest");
+                return;
+            }
+
             requestManager.ServeNextRequest();
         }
 

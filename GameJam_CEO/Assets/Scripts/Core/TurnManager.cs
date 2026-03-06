@@ -46,6 +46,13 @@ namespace CEOGame.Core
             }
         }
 
+        public void ResetTimer()
+        {
+            timeRemaining = dayDuration;
+            timerRunning = true;
+            timeUpFired = false;
+        }
+
         public void Pause() => timerRunning = false;
         public void Resume() => timerRunning = true;
     }

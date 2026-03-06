@@ -30,6 +30,9 @@ namespace CEOGame.UI
         {
             gameObject.SetActive(true);
 
+            approveButton.interactable = true;
+            denyButton.interactable = true;
+
             lines = request.dialogueLines;
             currentLine = 0;
 
@@ -66,8 +69,20 @@ namespace CEOGame.UI
             //outcomeText.text = text;
         }
 
+        public void SkipToLastLine()
+        {
+            if (lines == null || lines.Length == 0) return;
+            currentLine = lines.Length - 1;
+            ShowCurrentLine();
+            nextButton.gameObject.SetActive(false);
+        }
+
         public void Clear()
         {
+            lines = null;
+            currentLine = 0;
+            dialogueText.text = "";
+            nameText.text = "";
             gameObject.SetActive(false);
         }
     }

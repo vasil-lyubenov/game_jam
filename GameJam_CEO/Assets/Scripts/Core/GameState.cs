@@ -9,6 +9,9 @@ namespace CEOGame.Core
     {
         public static GameState Instance { get; private set; }
 
+        [Header("Company Roster")]
+        public EmployeeData[] allEmployees;
+
         [Header("Starting Values")]
         public int budget = 1000;
         public int morale = 70;

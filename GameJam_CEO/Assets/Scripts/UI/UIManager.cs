@@ -84,12 +84,14 @@ namespace CEOGame.UI
         {
             companyPanel.AddLogEntry("--- Day ended ---");
         }
+        void OnDayEnded() { }
 
         void OnRequestServed(RequestData request)
         {
             currentRequest = request;
             requestPanel.ShowRequest(request);
-            employeeInfoPanel.ShowEmployee(request.requestingEmployee);
+            employeeInfoPanel.ShowEmployee(request.requestingEmployee, request);
+            companyPanel.ShowForEmployee(request.requestingEmployee);
             hrTipPanel.ShowEmployee(request.requestingEmployee, hrTipSystem.tipsRemaining);
         }
 
@@ -106,9 +108,6 @@ namespace CEOGame.UI
 
         void OnDecisionProcessed(RequestData request, DecisionOutcome outcome)
         {
-            string decision = gameState.approvedRequests.Contains(request) ? "Approved" : "Denied";
-            companyPanel.AddLogEntry($"{decision}: {request.requestingEmployee.employeeName}'s {request.category}");
-
             requestPanel.ShowOutcome(outcome.outcomeText);
             StartCoroutine(ShowOutcomeThenNext());
         }
@@ -147,7 +146,7 @@ namespace CEOGame.UI
 
         void OnTraitRevealed(EmployeeData employee)
         {
-            employeeInfoPanel.ShowEmployee(employee);
+            employeeInfoPanel.ShowEmployee(employee, currentRequest);
             hrTipPanel.OnTraitRevealed(employee, hrTipSystem.tipsRemaining);
         }
 

@@ -27,5 +27,9 @@ namespace CEOGame.Data
         public HiddenTrait[] hiddenTraits;
         [Tooltip("Set at runtime when HR reveals traits")]
         public bool traitsRevealed;
+
+        [Header("HR Tip")]
+        [TextArea(2, 4)]
+        public string hrTip;
     }
 }

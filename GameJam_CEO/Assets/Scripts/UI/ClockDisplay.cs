@@ -10,6 +10,8 @@ namespace CEOGame.UI
         [SerializeField] RectTransform hourHand;
         [SerializeField] RectTransform minuteHand;
         [SerializeField] int minuteRotations = 3;
+        [SerializeField] float hourStartAngle = -270f;  // 9 o'clock position
+        [SerializeField] float hourTotalArc = 240f;     // 9 AM → 5 PM (8 hours on 12-hour face)
 
         [Header("Clock Face")]
         [SerializeField] Image clockFaceImage;
@@ -25,8 +27,8 @@ namespace CEOGame.UI
             float elapsed = dayDuration - timeRemaining;
             float fraction = Mathf.Clamp01(elapsed / dayDuration);
 
-            // Hour hand: 0 to -360 over the full day
-            float hourAngle = -fraction * 360f;
+            // Hour hand: starts at 9 o'clock, sweeps clockwise to 5 o'clock
+            float hourAngle = hourStartAngle - fraction * hourTotalArc;
             hourHand.localRotation = Quaternion.Euler(0f, 0f, hourAngle);
 
             // Minute hand: multiple full rotations over the day

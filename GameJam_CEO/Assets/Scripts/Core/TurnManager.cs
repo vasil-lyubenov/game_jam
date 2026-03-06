@@ -44,6 +44,9 @@ namespace CEOGame.Core
             OnTimerTick?.Invoke(timeRemaining);
         }
 
+        public void Pause() => timerRunning = false;
+        public void Resume() => timerRunning = true;
+
         public void EndDay()
         {
             timerRunning = false;

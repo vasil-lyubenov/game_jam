@@ -24,8 +24,12 @@ namespace CEOGame.UI
         public CompanyPanel companyPanel;
         public EndingScreen endingScreen;
 
+        [Header("Menu")]
+        public Button menuButton;
+        public PauseMenuPanel pauseMenuPanel;
+
         [Header("HR Tip")]
-        public Button hrTipButton;
+        public HRTipPanel hrTipPanel;
 
         RequestData currentRequest;
 
@@ -49,9 +53,11 @@ namespace CEOGame.UI
             // Button listeners
             requestPanel.approveButton.onClick.AddListener(() => OnPlayerDecision(true));
             requestPanel.denyButton.onClick.AddListener(() => OnPlayerDecision(false));
-            hrTipButton.onClick.AddListener(OnHRTipClicked);
+            hrTipPanel.useTipButton.onClick.AddListener(OnHRTipClicked);
+            menuButton.onClick.AddListener(OnMenuClicked);
 
             // Initialize display
+            timerDisplay.SetMaxTime(turnManager.dayDuration);
             statsPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people);
             timerDisplay.UpdateDay(gameState.currentDay);
             requestPanel.Clear();
@@ -87,7 +93,7 @@ namespace CEOGame.UI
             currentRequest = request;
             requestPanel.ShowRequest(request);
             employeeInfoPanel.ShowEmployee(request.requestingEmployee);
-            UpdateHRTipButton();
+            hrTipPanel.ShowEmployee(request.requestingEmployee, hrTipSystem.tipsRemaining);
         }
 
         void OnNoMoreRequests()
@@ -122,6 +128,20 @@ namespace CEOGame.UI
             endingScreen.Show(ending);
         }
 
+        void OnMenuClicked()
+        {
+            if (pauseMenuPanel.IsVisible)
+            {
+                pauseMenuPanel.Hide();
+                turnManager.Resume();
+            }
+            else
+            {
+                pauseMenuPanel.Show();
+                turnManager.Pause();
+            }
+        }
+
         void OnHRTipClicked()
         {
             if (currentRequest == null) return;
@@ -131,14 +151,7 @@ namespace CEOGame.UI
         void OnTraitRevealed(EmployeeData employee)
         {
             employeeInfoPanel.ShowEmployee(employee);
-            UpdateHRTipButton();
-        }
-
-        void UpdateHRTipButton()
-        {
-            hrTipButton.interactable = hrTipSystem.CanUseTip()
-                && currentRequest != null
-                && !currentRequest.requestingEmployee.traitsRevealed;
+            hrTipPanel.OnTraitRevealed(employee, hrTipSystem.tipsRemaining);
         }
 
         void OnDestroy()

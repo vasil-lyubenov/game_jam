@@ -82,7 +82,7 @@ namespace CEOGame.UI
 
         void OnTimeUp()
         {
-            companyPanel.AddLogEntry("--- Day ended ---");
+            //companyPanel.AddLogEntry("--- Day ended ---");
         }
         void OnDayEnded() { }
 

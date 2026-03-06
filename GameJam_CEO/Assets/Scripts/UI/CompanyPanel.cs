@@ -1,25 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using CEOGame.Core;
 using CEOGame.Data;
 
 namespace CEOGame.UI
 {
-    public class TeamSection : MonoBehaviour
-    {
-        public TMP_Text headerText;
-        public Transform employeesRow;
-    }
-
-    public class EmployeeCard : MonoBehaviour
-    {
-        public Image background;
-        public Image portraitImage;
-        public TMP_Text nameText;
-    }
-
     public class CompanyPanel : MonoBehaviour
     {
         [Header("Scroll Content")]
@@ -41,6 +26,7 @@ namespace CEOGame.UI
 
         public void Toggle()
         {
+            Debug.Log("Test turn on company panel");
             gameObject.SetActive(!gameObject.activeSelf);
         }
 

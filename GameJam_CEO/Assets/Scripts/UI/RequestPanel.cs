@@ -26,7 +26,7 @@ namespace CEOGame.UI
                 portraitImage.sprite = employee.portrait;
             nameText.text = employee.employeeName;
             dialogueText.text = request.requestDialogue;
-            outcomeText.text = "";
+            // outcomeText.text = "";
 
             approveButton.interactable = true;
             denyButton.interactable = true;

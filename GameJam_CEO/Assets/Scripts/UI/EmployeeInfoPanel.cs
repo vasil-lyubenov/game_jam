@@ -11,7 +11,6 @@ namespace CEOGame.UI
         public TMP_Text salaryText;
         public TMP_Text happinessText;
         public TMP_Text bioText;
-        public TMP_Text requestSummaryText;
 
         void Awake()
         {
@@ -30,7 +29,6 @@ namespace CEOGame.UI
             salaryText.text = $"Salary: ${employee.salary}";
             happinessText.text = $"Happiness: {employee.happiness}/100";
             bioText.text = employee.personalityBio;
-            requestSummaryText.text = $"Request: {FormatCategory(request.category)}";
         }
 
         string FormatCategory(RequestCategory category) => category switch

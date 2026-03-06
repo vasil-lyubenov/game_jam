@@ -11,10 +11,6 @@ namespace CEOGame.Data
         [TextArea(3, 6)]
         public string requestDialogue;
 
-        [Header("HR Tip")]
-        [TextArea(2, 4)]
-        public string hrTipInsight;
-
         [Header("Approve Outcome")]
         public DecisionOutcome approveOutcome;
 

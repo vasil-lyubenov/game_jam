@@ -87,11 +87,8 @@ namespace CEOGame.UI
         {
             clockDisplay.UpdateClock(seconds, turnManager.dayDuration);
 
-            if (dayCycleManager != null && environmentDisplay != null)
-            {
+            if (dayCycleManager != null)
                 dayCycleManager.UpdatePhase(seconds, turnManager.dayDuration);
-                environmentDisplay.SetEnvironment(dayCycleManager.CurrentPhase);
-            }
         }
 
         void OnTimeUp()

@@ -79,19 +79,14 @@ namespace CEOGame.UI
 
         Color GetRelationshipColor(EmployeeData current, EmployeeData other)
         {
-            if (current.relationships != null)
-            {
-                foreach (var rel in current.relationships)
-                {
-                    if (rel.colleague != other) continue;
-                    return rel.type switch
-                    {
-                        RelationshipType.Good => goodColor,
-                        RelationshipType.Bad => badColor,
-                        _ => neutralColor
-                    };
-                }
-            }
+            if (current.goodRelationships != null)
+                foreach (var e in current.goodRelationships)
+                    if (e == other) return goodColor;
+
+            if (current.badRelationships != null)
+                foreach (var e in current.badRelationships)
+                    if (e == other) return badColor;
+
             return neutralColor;
         }
     }

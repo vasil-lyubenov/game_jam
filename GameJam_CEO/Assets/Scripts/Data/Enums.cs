@@ -37,16 +37,6 @@ namespace CEOGame.Data
         Firing
     }
 
-    public enum HiddenTrait
-    {
-        Loyal,
-        Greedy,
-        Influencer,
-        Slacker,
-        Visionary,
-        Hothead
-    }
-
     public enum EndingType
     {
         VeryBad,

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using CEOGame.Data;
 
@@ -12,21 +13,25 @@ namespace CEOGame.Core
         TimeOfDay currentPhase = TimeOfDay.Morning;
         public TimeOfDay CurrentPhase => currentPhase;
 
+        public event Action<TimeOfDay> OnPhaseChanged;
+
         public TimeOfDay GetPhaseForTime(float timeRemaining, float dayDuration)
         {
             float elapsed = dayDuration - timeRemaining;
             float fraction = Mathf.Clamp01(elapsed / dayDuration);
 
-            if (fraction >= sunsetThreshold)
-                return TimeOfDay.Sunset;
-            if (fraction >= middayThreshold)
-                return TimeOfDay.Midday;
+            if (fraction >= sunsetThreshold) return TimeOfDay.Sunset;
+            if (fraction >= middayThreshold) return TimeOfDay.Midday;
             return TimeOfDay.Morning;
         }
 
         public void UpdatePhase(float timeRemaining, float dayDuration)
         {
-            currentPhase = GetPhaseForTime(timeRemaining, dayDuration);
+            TimeOfDay newPhase = GetPhaseForTime(timeRemaining, dayDuration);
+            if (newPhase == currentPhase) return;
+
+            currentPhase = newPhase;
+            OnPhaseChanged?.Invoke(currentPhase);
         }
     }
 }

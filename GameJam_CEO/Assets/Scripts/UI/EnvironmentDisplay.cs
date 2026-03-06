@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using CEOGame.Core;
 using CEOGame.Data;
 
 namespace CEOGame.UI
@@ -8,7 +9,7 @@ namespace CEOGame.UI
     {
         [SerializeField] Image backgroundImage;
         [SerializeField] Image deskImage;
-        [SerializeField] Image timerImage;
+        [SerializeField] DayCycleManager dayCycleManager;
 
         [Header("Backgrounds (Morning / Midday / Sunset)")]
         [SerializeField] Sprite[] backgrounds = new Sprite[3];
@@ -16,8 +17,17 @@ namespace CEOGame.UI
         [Header("Desks (Morning / Midday / Sunset)")]
         [SerializeField] Sprite[] desks = new Sprite[3];
 
-        [Header("Timers (Morning / Midday / Sunset)")]
-        [SerializeField] Sprite[] timer = new Sprite[3];
+        void Start()
+        {
+            if (dayCycleManager != null)
+                dayCycleManager.OnPhaseChanged += SetEnvironment;
+        }
+
+        void OnDestroy()
+        {
+            if (dayCycleManager != null)
+                dayCycleManager.OnPhaseChanged -= SetEnvironment;
+        }
 
         public void SetEnvironment(TimeOfDay phase)
         {

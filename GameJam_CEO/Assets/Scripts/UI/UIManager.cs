@@ -35,6 +35,9 @@ namespace CEOGame.UI
         [Header("HR Tip")]
         public HRTipPanel hrTipPanel;
 
+        [Header("Environment")]
+        public DayCycleManager dayCycleManager;
+
         RequestData currentRequest;
 
         void Start()
@@ -51,7 +54,7 @@ namespace CEOGame.UI
 
             decisionProcessor.OnDecisionProcessed += OnDecisionProcessed;
 
-            hrTipSystem.OnTraitRevealed += OnTraitRevealed;
+            hrTipSystem.OnTipUsed += OnTipUsed;
 
             // Button listeners
             requestPanel.approveButton.onClick.AddListener(() => OnPlayerDecision(true));
@@ -78,6 +81,7 @@ namespace CEOGame.UI
         void OnTimerTick(float seconds)
         {
             clockDisplay.UpdateClock(seconds, turnManager.dayDuration);
+            dayCycleManager.UpdatePhase(seconds, turnManager.dayDuration);
         }
 
         void OnTimeUp()
@@ -141,13 +145,12 @@ namespace CEOGame.UI
         void OnHRTipClicked()
         {
             if (currentRequest == null) return;
-            hrTipSystem.UseTip(currentRequest.requestingEmployee);
+            hrTipSystem.UseTip(currentRequest);
         }
 
-        void OnTraitRevealed(EmployeeData employee)
+        void OnTipUsed(string insight)
         {
-            employeeInfoPanel.ShowEmployee(employee, currentRequest);
-            hrTipPanel.OnTraitRevealed(employee, hrTipSystem.tipsRemaining);
+            hrTipPanel.ShowInsight(insight, hrTipSystem.tipsRemaining);
         }
 
         void OnDestroy()
@@ -170,7 +173,7 @@ namespace CEOGame.UI
             if (decisionProcessor != null)
                 decisionProcessor.OnDecisionProcessed -= OnDecisionProcessed;
             if (hrTipSystem != null)
-                hrTipSystem.OnTraitRevealed -= OnTraitRevealed;
+                hrTipSystem.OnTipUsed -= OnTipUsed;
         }
     }
 }

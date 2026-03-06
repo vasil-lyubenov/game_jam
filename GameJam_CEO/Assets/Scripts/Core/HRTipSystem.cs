@@ -8,17 +8,16 @@ namespace CEOGame.Core
     {
         public int tipsRemaining = 2;
 
-        public event Action<EmployeeData> OnTraitRevealed;
+        public event Action<string> OnTipUsed;
 
         public bool CanUseTip() => tipsRemaining > 0;
 
-        public void UseTip(EmployeeData employee)
+        public void UseTip(RequestData request)
         {
-            if (tipsRemaining <= 0 || employee == null) return;
+            if (tipsRemaining <= 0 || request == null) return;
 
             tipsRemaining--;
-            employee.traitsRevealed = true;
-            OnTraitRevealed?.Invoke(employee);
+            OnTipUsed?.Invoke(request.hrTipInsight);
         }
     }
 }

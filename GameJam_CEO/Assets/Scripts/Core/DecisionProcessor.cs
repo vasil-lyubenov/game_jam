@@ -14,6 +14,13 @@ namespace CEOGame.Core
             var gs = GameState.Instance;
 
             gs.ApplyStatChanges(outcome.budgetChange, outcome.moraleChange, outcome.peopleChange);
+
+            if (request.requestingEmployee != null && outcome.employeeHappinessChange != 0)
+            {
+                request.requestingEmployee.happiness =
+                    Mathf.Clamp(request.requestingEmployee.happiness + outcome.employeeHappinessChange, 0, 100);
+            }
+
             gs.RecordDecision(request, approved);
 
             OnDecisionProcessed?.Invoke(request, outcome);

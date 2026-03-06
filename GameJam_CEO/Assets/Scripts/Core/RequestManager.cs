@@ -23,6 +23,7 @@ namespace CEOGame.Core
             var eligible = allRequests
                 .Where(r => ArePrerequisitesMet(r))
                 .Where(r => !gs.approvedRequests.Contains(r) && !gs.deniedRequests.Contains(r))
+                .OrderBy(r => HasPrerequisites(r) ? 1 : 0)
                 .ToList();
 
             currentQueue = new Queue<RequestData>(eligible);
@@ -31,6 +32,8 @@ namespace CEOGame.Core
         public void ServeNextRequest()
         {
             if (GameState.Instance.gameOver) return;
+
+            BuildQueue();
 
             if (currentQueue.Count > 0)
             {
@@ -42,6 +45,12 @@ namespace CEOGame.Core
                 CurrentRequest = null;
                 OnNoMoreRequests?.Invoke();
             }
+        }
+
+        bool HasPrerequisites(RequestData request)
+        {
+            return (request.requiresApproved != null && request.requiresApproved.Length > 0)
+                || (request.requiresDenied != null && request.requiresDenied.Length > 0);
         }
 
         bool ArePrerequisitesMet(RequestData request)

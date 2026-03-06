@@ -4,11 +4,15 @@ namespace CEOGame.Data
     {
         Programming,
         Art,
-        Design,
+        GameDesign,
         QA,
         Marketing,
         Management,
-        Janitor
+        Janitor,
+        Finance,
+        CustomerSupport,
+        HR,
+        CEO
     }
 
     public enum Position

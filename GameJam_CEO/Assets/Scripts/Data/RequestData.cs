@@ -8,8 +8,7 @@ namespace CEOGame.Data
         [Header("Request Info")]
         public EmployeeData requestingEmployee;
         public RequestCategory category;
-        [TextArea(3, 6)]
-        public string requestDialogue;
+        public string[] dialogueLines;
 
         [Header("Approve Outcome")]
         public DecisionOutcome approveOutcome;

@@ -5,6 +5,6 @@ using UnityEngine.UI;
 public class EmployeeCard : MonoBehaviour
 {
     public Image background;
-    public Image portraitImage;
+    public Image stateImage;
     public TMP_Text nameText;
 }

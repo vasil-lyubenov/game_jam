@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using CEOGame.Core;
 using CEOGame.Data;
 
@@ -14,10 +17,10 @@ namespace CEOGame.UI
         public TeamSection teamSectionPrefab;
         public EmployeeCard employeeCardPrefab;
 
-        [Header("Relationship Colors")]
-        public Color goodColor = new Color(0.2f, 0.75f, 0.2f);
-        public Color neutralColor = new Color(0.15f, 0.15f, 0.15f);
-        public Color badColor = new Color(0.75f, 0.2f, 0.2f);
+        [Header("Relationship Sprites")]
+        public Sprite goodSprite;
+        public Sprite neutralSprite;
+        public Sprite badSprite;
 
         void Awake()
         {
@@ -26,7 +29,6 @@ namespace CEOGame.UI
 
         public void Toggle()
         {
-            Debug.Log("Test turn on company panel");
             gameObject.SetActive(!gameObject.activeSelf);
         }
 
@@ -38,6 +40,7 @@ namespace CEOGame.UI
             var allEmployees = GameState.Instance.allEmployees;
             if (allEmployees == null || allEmployees.Length == 0) return;
 
+            // Group by team, preserving Team enum order
             var byTeam = new Dictionary<Team, List<EmployeeData>>();
             foreach (var emp in allEmployees)
             {
@@ -47,33 +50,33 @@ namespace CEOGame.UI
                 byTeam[emp.team].Add(emp);
             }
 
-            foreach (var kvp in byTeam)
+            foreach (Team team in Enum.GetValues(typeof(Team)))
             {
-                var section = Instantiate(teamSectionPrefab, scrollContent);
-                section.headerText.text = kvp.Key.ToString();
+                if (!byTeam.ContainsKey(team) || byTeam[team].Count == 0) continue;
 
-                foreach (var emp in kvp.Value)
+                var section = Instantiate(teamSectionPrefab, scrollContent);
+                section.headerText.text = team.ToString();
+
+                foreach (var emp in byTeam[team])
                 {
                     var card = Instantiate(employeeCardPrefab, section.employeesRow);
                     card.nameText.text = emp.employeeName;
-                    if (emp.portrait != null)
-                        card.portraitImage.sprite = emp.portrait;
-                    card.background.color = GetRelationshipColor(current, emp);
+                    card.stateImage.sprite = GetStateSprite(current, emp);
                 }
             }
         }
 
-        Color GetRelationshipColor(EmployeeData current, EmployeeData other)
+        Sprite GetStateSprite(EmployeeData current, EmployeeData other)
         {
             if (current.goodRelationships != null)
                 foreach (var e in current.goodRelationships)
-                    if (e == other) return goodColor;
+                    if (e == other) return goodSprite;
 
             if (current.badRelationships != null)
                 foreach (var e in current.badRelationships)
-                    if (e == other) return badColor;
+                    if (e == other) return badSprite;
 
-            return neutralColor;
+            return neutralSprite;
         }
     }
 }

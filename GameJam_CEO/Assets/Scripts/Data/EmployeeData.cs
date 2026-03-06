@@ -21,8 +21,15 @@ namespace CEOGame.Data
         public int happiness = 50;
 
         [Header("Relationships")]
-        public EmployeeData[] goodRelationships;
-        public EmployeeData[] neutralRelationships;
-        public EmployeeData[] badRelationships;
+        public Relationship[] relationships;
+
+        [Header("Hidden")]
+        public HiddenTrait[] hiddenTraits;
+        [Tooltip("Set at runtime when HR reveals traits")]
+        public bool traitsRevealed;
+
+        [Header("HR Tip")]
+        [TextArea(2, 4)]
+        public string hrTip;
     }
 }

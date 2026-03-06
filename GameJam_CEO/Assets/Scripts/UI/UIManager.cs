@@ -32,11 +32,12 @@ namespace CEOGame.UI
         public Button charshaButton;
         public Button vizitkaButton;
 
+        [Header("Environment")]
+        public EnvironmentDisplay environmentDisplay;
+        public DayCycleManager dayCycleManager;
+
         [Header("HR Tip")]
         public HRTipPanel hrTipPanel;
-
-        [Header("Environment")]
-        public DayCycleManager dayCycleManager;
 
         RequestData currentRequest;
 
@@ -65,7 +66,10 @@ namespace CEOGame.UI
             vizitkaButton.onClick.AddListener(() => employeeInfoPanel.Toggle());
 
             // Initialize display
+            if (environmentDisplay != null)
+                environmentDisplay.SetEnvironment(TimeOfDay.Morning);
             statsPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people);
+            hrTipPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people, hrTipSystem.tipsRemaining);
             requestPanel.Clear();
 
             // Build queue and serve
@@ -76,12 +80,18 @@ namespace CEOGame.UI
         void OnStatsChanged(int budget, int morale, int people)
         {
             statsPanel.UpdateStats(budget, morale, people);
+            hrTipPanel.UpdateStats(budget, morale, people, hrTipSystem.tipsRemaining);
         }
 
         void OnTimerTick(float seconds)
         {
             clockDisplay.UpdateClock(seconds, turnManager.dayDuration);
-            dayCycleManager.UpdatePhase(seconds, turnManager.dayDuration);
+
+            if (dayCycleManager != null && environmentDisplay != null)
+            {
+                dayCycleManager.UpdatePhase(seconds, turnManager.dayDuration);
+                environmentDisplay.SetEnvironment(dayCycleManager.CurrentPhase);
+            }
         }
 
         void OnTimeUp()
@@ -97,6 +107,7 @@ namespace CEOGame.UI
             employeeInfoPanel.ShowEmployee(request.requestingEmployee, request);
             companyPanel.ShowForEmployee(request.requestingEmployee);
             hrTipPanel.ShowEmployee(request.requestingEmployee, hrTipSystem.tipsRemaining);
+            hrTipPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people, hrTipSystem.tipsRemaining);
         }
 
         void OnNoMoreRequests()
@@ -145,12 +156,13 @@ namespace CEOGame.UI
         void OnHRTipClicked()
         {
             if (currentRequest == null) return;
-            hrTipSystem.UseTip(currentRequest);
+            hrTipSystem.UseTip(currentRequest.requestingEmployee);
         }
 
-        void OnTipUsed(string insight)
+        void OnTipUsed(string tipText)
         {
-            hrTipPanel.ShowInsight(insight, hrTipSystem.tipsRemaining);
+            hrTipPanel.ShowTipBubble(tipText, hrTipSystem.tipsRemaining);
+            hrTipPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people, hrTipSystem.tipsRemaining);
         }
 
         void OnDestroy()

@@ -12,12 +12,13 @@ namespace CEOGame.Core
 
         public bool CanUseTip() => tipsRemaining > 0;
 
-        public void UseTip(RequestData request)
+        public void UseTip(EmployeeData employee)
         {
-            if (tipsRemaining <= 0 || request == null) return;
+            if (tipsRemaining <= 0 || employee == null) return;
+            if (string.IsNullOrEmpty(employee.hrTip)) return;
 
             tipsRemaining--;
-            OnTipUsed?.Invoke(request.hrTipInsight);
+            OnTipUsed?.Invoke(employee.hrTip);
         }
     }
 }

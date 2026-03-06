@@ -20,7 +20,7 @@ namespace CEOGame.UI
         public StatsPanel statsPanel;
         public RequestPanel requestPanel;
         public EmployeeInfoPanel employeeInfoPanel;
-        public TimerDisplay timerDisplay;
+        public ClockDisplay clockDisplay;
         public CompanyPanel companyPanel;
         public EndingScreen endingScreen;
 
@@ -41,11 +41,10 @@ namespace CEOGame.UI
         {
             // Subscribe to core events
             gameState.OnStatsChanged += OnStatsChanged;
-            gameState.OnDayChanged += OnDayChanged;
             gameState.OnGameOver += OnGameOver;
 
             turnManager.OnTimerTick += OnTimerTick;
-            turnManager.OnDayEnded += OnDayEnded;
+            turnManager.OnTimeUp += OnTimeUp;
 
             requestManager.OnRequestServed += OnRequestServed;
             requestManager.OnNoMoreRequests += OnNoMoreRequests;
@@ -63,13 +62,11 @@ namespace CEOGame.UI
             vizitkaButton.onClick.AddListener(() => employeeInfoPanel.Toggle());
 
             // Initialize display
-            timerDisplay.SetMaxTime(turnManager.dayDuration);
             statsPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people);
-            timerDisplay.UpdateDay(gameState.currentDay);
             requestPanel.Clear();
 
-            // Build first day queue and serve
-            requestManager.BuildQueue(gameState.currentDay);
+            // Build queue and serve
+            requestManager.BuildQueue();
             requestManager.ServeNextRequest();
         }
 
@@ -78,20 +75,14 @@ namespace CEOGame.UI
             statsPanel.UpdateStats(budget, morale, people);
         }
 
-        void OnDayChanged(int day)
-        {
-            timerDisplay.UpdateDay(day);
-            requestManager.BuildQueue(day);
-        }
-
         void OnTimerTick(float seconds)
         {
-            timerDisplay.UpdateTimer(seconds);
+            clockDisplay.UpdateClock(seconds, turnManager.dayDuration);
         }
 
-        void OnDayEnded()
+        void OnTimeUp()
         {
-            companyPanel.AddLogEntry($"--- Day {gameState.currentDay} ended ---");
+            companyPanel.AddLogEntry("--- Day ended ---");
         }
 
         void OnRequestServed(RequestData request)
@@ -165,13 +156,12 @@ namespace CEOGame.UI
             if (gameState != null)
             {
                 gameState.OnStatsChanged -= OnStatsChanged;
-                gameState.OnDayChanged -= OnDayChanged;
                 gameState.OnGameOver -= OnGameOver;
             }
             if (turnManager != null)
             {
                 turnManager.OnTimerTick -= OnTimerTick;
-                turnManager.OnDayEnded -= OnDayEnded;
+                turnManager.OnTimeUp -= OnTimeUp;
             }
             if (requestManager != null)
             {

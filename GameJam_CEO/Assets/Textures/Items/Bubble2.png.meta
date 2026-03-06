@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 4ae21acbd3c814f11814c4aa4b87e4d0
+guid: e0f931fa2ec13411594fd7619af40e6d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5360013873055048941
-    second: CompanyInfoIcon_0
-  - first:
-      213: 5130567887577243597
-    second: CompanyInfoIcon_1
+      213: -3448220263590106980
+    second: Bubble2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,45 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: CompanyInfoIcon_0
+      name: Bubble2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 392
-        height: 245
+        width: 68
+        height: 62
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: de4ac9e0838926a40800000000000000
-      internalID: 5360013873055048941
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: CompanyInfoIcon_1
-      rect:
-        serializedVersion: 2
-        x: 265
-        y: 0
-        width: 127
-        height: 112
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: dcf51139f40733740800000000000000
-      internalID: 5130567887577243597
+      spriteID: c98686190f57520d0800000000000000
+      internalID: -3448220263590106980
       vertices: []
       indices: 
       edges: []
@@ -150,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 48c4f131e3a704a2ab27b9c32db118a3
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -160,8 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      CompanyInfoIcon_0: 5360013873055048941
-      CompanyInfoIcon_1: 5130567887577243597
+      Bubble2_0: -3448220263590106980
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

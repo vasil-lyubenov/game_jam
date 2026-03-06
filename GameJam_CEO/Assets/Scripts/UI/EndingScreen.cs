@@ -60,14 +60,12 @@ namespace CEOGame.UI
             // Initial state: panel1 visible, panel2 hidden, text hidden
             panel2Group.alpha = 0f;
             panel2Image.gameObject.SetActive(false);
-            endingText.gameObject.SetActive(false);
             playAgainButton.gameObject.SetActive(false);
             advanceButton.gameObject.SetActive(true);
         }
 
         void OnAdvanceClicked()
         {
-            advanceButton.gameObject.SetActive(false);
             panel2Image.gameObject.SetActive(true);
             StartCoroutine(FadeInPanel2());
         }
@@ -84,7 +82,6 @@ namespace CEOGame.UI
             }
             panel2Group.alpha = 1f;
 
-            endingText.gameObject.SetActive(true);
             playAgainButton.gameObject.SetActive(true);
         }
 

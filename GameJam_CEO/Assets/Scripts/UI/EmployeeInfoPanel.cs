@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using CEOGame.Data;
 
@@ -6,6 +7,7 @@ namespace CEOGame.UI
 {
     public class EmployeeInfoPanel : MonoBehaviour
     {
+        public Image portraitImage;
         public TMP_Text nameText;
         public TMP_Text positionText;
         public TMP_Text salaryText;
@@ -24,9 +26,10 @@ namespace CEOGame.UI
 
         public void ShowEmployee(EmployeeData employee, RequestData request)
         {
+            if (portraitImage != null) portraitImage.sprite = employee.portrait;
             nameText.text = employee.employeeName;
             positionText.text = $"{employee.position} · {employee.team}";
-            salaryText.text = $"Salary: ${employee.salary}";
+            salaryText.text = $"Salary: {employee.salary}€";
             happinessText.text = $"Happiness: {employee.happiness}/100";
             bioText.text = employee.personalityBio;
         }

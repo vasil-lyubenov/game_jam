@@ -44,10 +44,10 @@ namespace CEOGame.UI
 
         public void UpdateStats(int budget, int morale, int people, int tips)
         {
-            if (budgetText != null) budgetText.text = $"Budget: ${budget}";
-            if (peopleText != null) peopleText.text = $"People: {people}";
-            if (happinessText != null) happinessText.text = $"Happiness: {morale}%";
-            if (tipsText != null) tipsText.text = $"Tips: {tips}";
+            if (budgetText != null) budgetText.text =$"{budget:N0}€";
+            if (peopleText != null) peopleText.text = $"{people}";
+            if (happinessText != null) happinessText.text = $"{morale}%";
+            // if (tipsText != null) tipsText.text = $"Tips: {tips}"; // This should be from the employee data's hr tip
         }
     }
 }

@@ -8,7 +8,8 @@ namespace CEOGame.Data
         QA,
         Marketing,
         Management,
-        Janitor
+        Janitor,
+        CustomerSupport
     }
 
     public enum Position

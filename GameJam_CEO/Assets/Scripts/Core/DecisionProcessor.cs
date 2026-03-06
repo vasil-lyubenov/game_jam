@@ -32,18 +32,6 @@ namespace CEOGame.Core
                 employee.position = outcome.newPosition;
             }
 
-            // Queue delayed effects
-            if (outcome.hasDelayedEffect)
-            {
-                gs.pendingDelayedEffects.Add(new DelayedEffect
-                {
-                    turnsRemaining = outcome.delayedTurns,
-                    budgetChange = outcome.delayedBudgetChange,
-                    moraleChange = outcome.delayedMoraleChange,
-                    sourceRequest = request
-                });
-            }
-
             // Relationship ripple
             ProcessRelationshipRipple(employee, outcome);
 

@@ -17,11 +17,11 @@ namespace CEOGame.Core
         public event Action<RequestData> OnRequestServed;
         public event Action OnNoMoreRequests;
 
-        public void BuildQueue(int day)
+        public void BuildQueue()
         {
             var gs = GameState.Instance;
             var eligible = allRequests
-                .Where(r => r.earliestTurn <= day && ArePrerequisitesMet(r))
+                .Where(r => ArePrerequisitesMet(r))
                 .Where(r => !gs.approvedRequests.Contains(r) && !gs.deniedRequests.Contains(r))
                 .OrderByDescending(r => r.priority)
                 .ToList();

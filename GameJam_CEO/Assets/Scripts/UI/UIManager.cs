@@ -15,12 +15,12 @@ namespace CEOGame.UI
         public DecisionProcessor decisionProcessor;
         public HRTipSystem hrTipSystem;
         public EndingsManager endingsManager;
+        public EmployeeAnimator employeeAnimator;
 
         [Header("UI Panels")]
         public StatsPanel statsPanel;
         public RequestPanel requestPanel;
         public EmployeeInfoPanel employeeInfoPanel;
-        public TimerDisplay timerDisplay;
         public CompanyPanel companyPanel;
         public EndingScreen endingScreen;
 
@@ -31,17 +31,24 @@ namespace CEOGame.UI
         [Header("HR Tip")]
         public HRTipPanel hrTipPanel;
 
+        [Header("Day Cycle")]
+        public DayCycleManager dayCycleManager;
+        public EnvironmentDisplay environmentDisplay;
+        public ClockDisplay clockDisplay;
+
         RequestData currentRequest;
+        TimeOfDay lastAppliedPhase = TimeOfDay.Morning;
+        bool timeUpLocked;
+        bool gameOverPending;
 
         void Start()
         {
             // Subscribe to core events
             gameState.OnStatsChanged += OnStatsChanged;
-            gameState.OnDayChanged += OnDayChanged;
             gameState.OnGameOver += OnGameOver;
 
             turnManager.OnTimerTick += OnTimerTick;
-            turnManager.OnDayEnded += OnDayEnded;
+            turnManager.OnTimeUp += OnTimeUp;
 
             requestManager.OnRequestServed += OnRequestServed;
             requestManager.OnNoMoreRequests += OnNoMoreRequests;
@@ -50,6 +57,9 @@ namespace CEOGame.UI
 
             hrTipSystem.OnTraitRevealed += OnTraitRevealed;
 
+            employeeAnimator.OnWalkInComplete += OnWalkInComplete;
+            employeeAnimator.OnWalkOutComplete += OnWalkOutComplete;
+
             // Button listeners
             requestPanel.approveButton.onClick.AddListener(() => OnPlayerDecision(true));
             requestPanel.denyButton.onClick.AddListener(() => OnPlayerDecision(false));
@@ -57,13 +67,15 @@ namespace CEOGame.UI
             menuButton.onClick.AddListener(OnMenuClicked);
 
             // Initialize display
-            timerDisplay.SetMaxTime(turnManager.dayDuration);
             statsPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people);
-            timerDisplay.UpdateDay(gameState.currentDay);
             requestPanel.Clear();
 
-            // Build first day queue and serve
-            requestManager.BuildQueue(gameState.currentDay);
+            // Initialize environment
+            lastAppliedPhase = TimeOfDay.Morning;
+            environmentDisplay.SetEnvironment(TimeOfDay.Morning);
+
+            // Build first queue and serve
+            requestManager.BuildQueue();
             requestManager.ServeNextRequest();
         }
 
@@ -72,33 +84,44 @@ namespace CEOGame.UI
             statsPanel.UpdateStats(budget, morale, people);
         }
 
-        void OnDayChanged(int day)
-        {
-            timerDisplay.UpdateDay(day);
-            requestManager.BuildQueue(day);
-        }
-
         void OnTimerTick(float seconds)
         {
-            timerDisplay.UpdateTimer(seconds);
-        }
+            clockDisplay.UpdateClock(seconds, turnManager.DayDuration);
+            dayCycleManager.UpdatePhase(seconds, turnManager.DayDuration);
 
-        void OnDayEnded()
-        {
-            companyPanel.AddLogEntry($"--- Day {gameState.currentDay} ended ---");
+            var currentPhase = dayCycleManager.CurrentPhase;
+            if (currentPhase != lastAppliedPhase)
+            {
+                lastAppliedPhase = currentPhase;
+                environmentDisplay.SetEnvironment(currentPhase);
+            }
         }
 
         void OnRequestServed(RequestData request)
         {
             currentRequest = request;
-            requestPanel.ShowRequest(request);
-            employeeInfoPanel.ShowEmployee(request.requestingEmployee);
-            hrTipPanel.ShowEmployee(request.requestingEmployee, hrTipSystem.tipsRemaining);
+
+            // Swap sprite and play walk-in; UI shown after animation completes
+            var employee = request.requestingEmployee;
+            if (employee.portrait != null)
+                employeeAnimator.SetEmployeeSprite(employee.portrait);
+
+            requestPanel.Clear();
+            employeeAnimator.PlayWalkIn();
+        }
+
+        void OnWalkInComplete()
+        {
+            if (currentRequest == null) return;
+            requestPanel.ShowRequest(currentRequest);
+            employeeInfoPanel.ShowEmployee(currentRequest.requestingEmployee);
+            hrTipPanel.ShowEmployee(currentRequest.requestingEmployee, hrTipSystem.tipsRemaining);
         }
 
         void OnNoMoreRequests()
         {
             requestPanel.Clear();
+            gameState.TriggerGameOver();
         }
 
         void OnPlayerDecision(bool approved)
@@ -113,13 +136,53 @@ namespace CEOGame.UI
             companyPanel.AddLogEntry($"{decision}: {request.requestingEmployee.employeeName}'s {request.category}");
 
             requestPanel.ShowOutcome(outcome.outcomeText);
-            StartCoroutine(ShowOutcomeThenNext());
+            StartCoroutine(ShowOutcomeThenWalkOut());
         }
 
-        IEnumerator ShowOutcomeThenNext()
+        IEnumerator ShowOutcomeThenWalkOut()
         {
             yield return new WaitForSeconds(2f);
+
+            requestPanel.Clear();
+            employeeAnimator.PlayWalkOut();
+        }
+
+        void OnWalkOutComplete()
+        {
+            // If time ran out or game over pending, end now
+            if (timeUpLocked || gameOverPending)
+            {
+                timeUpLocked = false;
+                gameOverPending = false;
+                SetUILocked(false);
+                gameState.TriggerGameOver();
+                return;
+            }
+
+            // Rebuild queue to pick up newly eligible prerequisite-chained requests
+            requestManager.BuildQueue();
             requestManager.ServeNextRequest();
+        }
+
+        void OnTimeUp()
+        {
+            if (currentRequest != null)
+            {
+                // Request is active — lock UI except approve/deny, game over after walk-out
+                timeUpLocked = true;
+                SetUILocked(true);
+            }
+            else
+            {
+                // No active request — game over immediately
+                gameState.TriggerGameOver();
+            }
+        }
+
+        void SetUILocked(bool locked)
+        {
+            menuButton.interactable = !locked;
+            hrTipPanel.useTipButton.interactable = !locked;
         }
 
         void OnGameOver()
@@ -159,13 +222,12 @@ namespace CEOGame.UI
             if (gameState != null)
             {
                 gameState.OnStatsChanged -= OnStatsChanged;
-                gameState.OnDayChanged -= OnDayChanged;
                 gameState.OnGameOver -= OnGameOver;
             }
             if (turnManager != null)
             {
                 turnManager.OnTimerTick -= OnTimerTick;
-                turnManager.OnDayEnded -= OnDayEnded;
+                turnManager.OnTimeUp -= OnTimeUp;
             }
             if (requestManager != null)
             {
@@ -176,6 +238,11 @@ namespace CEOGame.UI
                 decisionProcessor.OnDecisionProcessed -= OnDecisionProcessed;
             if (hrTipSystem != null)
                 hrTipSystem.OnTraitRevealed -= OnTraitRevealed;
+            if (employeeAnimator != null)
+            {
+                employeeAnimator.OnWalkInComplete -= OnWalkInComplete;
+                employeeAnimator.OnWalkOutComplete -= OnWalkOutComplete;
+            }
         }
     }
 }

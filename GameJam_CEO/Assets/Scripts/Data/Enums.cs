@@ -54,4 +54,11 @@ namespace CEOGame.Data
         Neutral,
         Good
     }
+
+    public enum TimeOfDay
+    {
+        Morning,
+        Midday,
+        Sunset
+    }
 }

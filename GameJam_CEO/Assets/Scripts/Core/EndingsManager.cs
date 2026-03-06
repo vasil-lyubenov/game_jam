@@ -10,15 +10,15 @@ namespace CEOGame.Core
             var gs = GameState.Instance;
 
             // Good ending
-            if (gs.budget >= 900 && gs.morale >= 60 && gs.people >= 40)
+            if (gs.budget >= 800 && gs.morale >= 55 && gs.people >= 38)
                 return EndingType.Good;
 
             // Very bad ending
-            if (gs.budget < 400 && gs.morale < 25 && gs.people < 20)
+            if (gs.budget < 500 && gs.morale < 30 && gs.people < 25)
                 return EndingType.VeryBad;
 
             // Bad ending
-            if (gs.budget < 600 || gs.morale < 35 || gs.people < 30)
+            if (gs.budget < 650 || gs.morale < 40 || gs.people < 32)
                 return EndingType.Bad;
 
             return EndingType.Neutral;

@@ -9,6 +9,16 @@ namespace CEOGame.UI
 
         System.Text.StringBuilder logBuilder = new();
 
+        void Awake()
+        {
+            gameObject.SetActive(false);
+        }
+
+        public void Toggle()
+        {
+            gameObject.SetActive(!gameObject.activeSelf);
+        }
+
         public void AddLogEntry(string entry)
         {
             logBuilder.AppendLine(entry);

@@ -28,9 +28,9 @@ namespace CEOGame.UI
         {
             if (portraitImage != null) portraitImage.sprite = employee.portrait;
             nameText.text = employee.employeeName;
-            positionText.text = $"{employee.position} · {employee.team}";
-            salaryText.text = $"Salary: {employee.salary}€";
-            happinessText.text = $"Happiness: {employee.happiness}/100";
+            positionText.text = $"Позиция: {employee.position} · {employee.team}";
+            salaryText.text = $"Заплата: {employee.salary}€";
+            happinessText.text = $"Щастие: {employee.happiness}/100";
             bioText.text = employee.personalityBio;
         }
 

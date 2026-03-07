@@ -7,7 +7,6 @@ namespace CEOGame.UI
 {
     public class HRTipPanel : MonoBehaviour
     {
-        // public TMP_Text employeeNameText;
         public TMP_Text tipsRemainingText;
         public Button useTipButton;
 
@@ -23,7 +22,6 @@ namespace CEOGame.UI
 
         public void ShowEmployee(EmployeeData employee, int tipsRemaining)
         {
-            // employeeNameText.text = employee.employeeName;
             tipsRemainingText.text = $"Tips: {tipsRemaining}";
             HideTipBubble();
             useTipButton.interactable = tipsRemaining > 0 && !string.IsNullOrEmpty(employee.hrTip);
@@ -47,7 +45,7 @@ namespace CEOGame.UI
             if (budgetText != null) budgetText.text =$"{budget:N0}€";
             if (peopleText != null) peopleText.text = $"{people}";
             if (happinessText != null) happinessText.text = $"{morale}%";
-            // if (tipsText != null) tipsText.text = $"Tips: {tips}"; // This should be from the employee data's hr tip
+            if (tipsText != null) tipsText.text = $"Съвети: {tips}/2";
         }
     }
 }

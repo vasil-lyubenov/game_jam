@@ -20,6 +20,7 @@ namespace CEOGame.UI
 
         [Header("Text & Buttons")]
         public TMP_Text endingText;
+        public TMP_Text endingTitle;
         public Button advanceButton;
         public Button playAgainButton;
 
@@ -32,9 +33,17 @@ namespace CEOGame.UI
         public string[] endingTexts =
         {
             "Отказа на Гинка имаше последствия. Тя напусна. А след нея — и съпругът й.",
-            "Бюджетът падна, хората се разочароваха. Компанията едва оцеля.",
-            "Справихте се. Не блестящо, но компанията продължава.",
-            "Страхотни решения. Компанията процъфтява и екипът е по-силен от всякога."
+            "Бюджетът падна, хората се разочароваха. Компанията фалира.",
+            "Поредния ден в матрицата...",
+            "Айде хабиби! Компанията процъфтява и екипът е по-силен от всякога."
+        };
+
+        public string[] endingTitles =
+        {
+            "Отмъщението за Гинка",
+            "Ще се ходи в борсата",
+            "Какъв е смисъла в живота?",
+            "Тиймбийдинг в Дубай"
         };
 
         void Awake()
@@ -56,6 +65,7 @@ namespace CEOGame.UI
                 panel2Image.sprite = panel2Sprites[idx];
 
             endingText.text = (endingTexts != null && idx < endingTexts.Length) ? endingTexts[idx] : "";
+            endingTitle.text = (endingTitles != null && idx < endingTitles.Length) ? endingTitles[idx] : "";
 
             // Initial state: panel1 visible, panel2 hidden, text hidden
             panel2Group.alpha = 0f;

@@ -19967,7 +19967,7 @@ MonoBehaviour:
   panel2Group: {fileID: 4723854573345310870}
   fadeDuration: 1.5
   endingText: {fileID: 5003216234632455281}
-  endingTitle: {fileID: 0}
+  endingTitle: {fileID: 2142148385443030476}
   advanceButton: {fileID: 1920845867180030822}
   playAgainButton: {fileID: 5075903170774183801}
   panel1Sprites:

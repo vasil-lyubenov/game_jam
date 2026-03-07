@@ -40,7 +40,7 @@ namespace CEOGame.UI
         public EmployeeAnimator employeeAnimator;
 
         [Header("HR Tip")]
-        // public HRTipPanel hrTipPanel;
+        public HRTipPanel hrTipPanel;
 
         RequestData currentRequest;
         RequestData pendingRequest;
@@ -76,7 +76,8 @@ namespace CEOGame.UI
                 AudioManager.Instance?.PlayDeny();
                 OnPlayerDecision(false);
             });
-            // hrTipPanel.useTipButton.onClick.AddListener(OnHRTipClicked);
+            if (hrTipPanel != null)
+                hrTipPanel.useTipButton.onClick.AddListener(OnHRTipClicked);
             menuButton.onClick.AddListener(OnMenuClicked);
             charshaButton.onClick.AddListener(() => {
                 AudioManager.Instance?.PlayCompanySheet();
@@ -90,8 +91,9 @@ namespace CEOGame.UI
             // Initialize display
             if (environmentDisplay != null)
                 environmentDisplay.SetEnvironment(TimeOfDay.Morning);
-            // statsPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people);
-            // hrTipPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people, hrTipSystem.tipsRemaining);
+            statsPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people);
+            if (hrTipPanel != null)
+                hrTipPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people, hrTipSystem.tipsRemaining);
             requestPanel.Clear();
 
             // Build queue and serve
@@ -101,8 +103,9 @@ namespace CEOGame.UI
 
         void OnStatsChanged(int budget, int morale, int people)
         {
-            // statsPanel.UpdateStats(budget, morale, people);
-            // hrTipPanel.UpdateStats(budget, morale, people, hrTipSystem.tipsRemaining);
+            statsPanel.UpdateStats(budget, morale, people);
+            if (hrTipPanel != null)
+                hrTipPanel.UpdateStats(budget, morale, people, hrTipSystem.tipsRemaining);
         }
 
         void OnTimerTick(float seconds)
@@ -165,12 +168,16 @@ namespace CEOGame.UI
             requestPanel.ShowRequest(currentRequest);
             employeeInfoPanel.ShowEmployee(currentRequest.requestingEmployee, currentRequest);
             companyPanel.ShowForEmployee(currentRequest.requestingEmployee);
+            if (hrTipPanel != null)
+                hrTipPanel.ShowEmployee(currentRequest.requestingEmployee, hrTipSystem.tipsRemaining);
         }
 
         void OnNoMoreRequests()
         {
-            Debug.Log("[UIManager] OnNoMoreRequests");
+            Debug.Log("[UIManager] OnNoMoreRequests — showing ending");
             requestPanel.Clear();
+            gameState.gameOver = true;
+            OnGameOver();
         }
 
         void OnPlayerDecision(bool approved)
@@ -191,7 +198,7 @@ namespace CEOGame.UI
 
         void OnDecisionProcessed(RequestData request, DecisionOutcome outcome)
         {
-            Debug.Log($"[UIManager] OnDecisionProcessed: request={request.name}, gameOver={gameState.gameOver}");
+            Debug.Log($"[UIManager] OnDecisionProcessed: request={request.name}");
             requestPanel.ShowOutcome(outcome.outcomeText);
             currentRequest = null;
             StartCoroutine(ShowOutcomeThenWalkOut());
@@ -215,18 +222,14 @@ namespace CEOGame.UI
 
         void OnWalkOutComplete()
         {
-            Debug.Log($"[UIManager] OnWalkOutComplete: gameOver={gameState.gameOver}");
+            Debug.Log("[UIManager] OnWalkOutComplete");
             requestPanel.Clear();
 
             // Hide toggle panels between requests
             employeeInfoPanel.gameObject.SetActive(false);
             companyPanel.gameObject.SetActive(false);
-
-            if (gameState.gameOver)
-            {
-                Debug.Log("[UIManager] Game over — skipping ServeNextRequest");
-                return;
-            }
+            if (hrTipPanel != null)
+                hrTipPanel.HideTipBubble();
 
             requestManager.ServeNextRequest();
         }
@@ -259,8 +262,12 @@ namespace CEOGame.UI
 
         void OnTipUsed(string tipText)
         {
-            // hrTipPanel.ShowTipBubble(tipText, hrTipSystem.tipsRemaining);
-            // hrTipPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people, hrTipSystem.tipsRemaining);
+            AudioManager.Instance?.PlayHRTipChime();
+            if (hrTipPanel != null)
+            {
+                hrTipPanel.ShowTipBubble(tipText, hrTipSystem.tipsRemaining);
+                hrTipPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people, hrTipSystem.tipsRemaining);
+            }
         }
 
         void OnDestroy()

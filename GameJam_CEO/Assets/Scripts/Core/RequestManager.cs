@@ -31,8 +31,6 @@ namespace CEOGame.Core
 
         public void ServeNextRequest()
         {
-            if (GameState.Instance.gameOver) return;
-
             BuildQueue();
 
             if (currentQueue.Count > 0)

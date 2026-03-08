@@ -42,11 +42,17 @@ namespace CEOGame.UI
         [Header("HR Tip")]
         public HRTipPanel hrTipPanel;
 
+        [Header("Tutorial")]
+        public TutorialManager tutorialManager;
+
         RequestData currentRequest;
         RequestData pendingRequest;
 
         void Start()
         {
+            // Freeze timer immediately — tutorial runs before first request
+            turnManager.Pause();
+
             // Subscribe to core events
             gameState.OnStatsChanged += OnStatsChanged;
             gameState.OnGameOver += OnGameOver;
@@ -96,9 +102,30 @@ namespace CEOGame.UI
                 hrTipPanel.UpdateStats(gameState.budget, gameState.morale, gameState.people, hrTipSystem.tipsRemaining);
             requestPanel.Clear();
 
-            // Build queue and serve
-            requestManager.BuildQueue();
-            requestManager.ServeNextRequest();
+            // Disable side panels — no employee data to show yet
+            charshaButton.interactable = false;
+            vizitkaButton.interactable = false;
+
+            // Run tutorial first, or start game directly if not configured
+            if (tutorialManager != null && tutorialManager.ralicaData != null)
+            {
+                tutorialManager.OnTutorialComplete += OnTutorialComplete;
+                tutorialManager.StartTutorial();
+                if (employeeAnimator != null)
+                {
+                    employeeAnimator.SetEmployeeSprite(tutorialManager.ralicaData.portrait);
+                    employeeAnimator.PlayWalkIn();
+                }
+                else
+                {
+                    ShowTutorialPanel();
+                }
+            }
+            else
+            {
+                requestManager.BuildQueue();
+                requestManager.ServeNextRequest();
+            }
         }
 
         void OnStatsChanged(int budget, int morale, int people)
@@ -148,7 +175,36 @@ namespace CEOGame.UI
         void OnWalkInComplete()
         {
             Debug.Log("[UIManager] OnWalkInComplete");
-            ShowPendingRequest();
+            if (tutorialManager != null && tutorialManager.TutorialActive)
+                ShowTutorialPanel();
+            else
+                ShowPendingRequest();
+        }
+
+        void ShowTutorialPanel()
+        {
+            requestPanel.ShowTutorial(
+                tutorialManager.ralicaData.portrait,
+                tutorialManager.ralicaData.employeeName,
+                tutorialManager.tutorialLines,
+                OnTutorialLastLineNext
+            );
+        }
+
+        void OnTutorialLastLineNext()
+        {
+            if (employeeAnimator != null)
+                employeeAnimator.PlayWalkOut();
+            else
+                OnWalkOutComplete();
+        }
+
+        void OnTutorialComplete()
+        {
+            Debug.Log("[UIManager] OnTutorialComplete — starting real game");
+            requestManager.BuildQueue();
+            requestManager.ServeNextRequest();
+            // ServeNextRequest → OnRequestServed → walk in → ShowPendingRequest → ResetTimer
         }
 
         void ShowPendingRequest()
@@ -231,7 +287,10 @@ namespace CEOGame.UI
             if (hrTipPanel != null)
                 hrTipPanel.HideTipBubble();
 
-            requestManager.ServeNextRequest();
+            if (tutorialManager != null && tutorialManager.TutorialActive)
+                tutorialManager.EndTutorial(); // fires OnTutorialComplete → BuildQueue + ServeNextRequest
+            else
+                requestManager.ServeNextRequest();
         }
 
         void OnGameOver()
@@ -296,6 +355,8 @@ namespace CEOGame.UI
                 employeeAnimator.OnWalkInComplete -= OnWalkInComplete;
                 employeeAnimator.OnWalkOutComplete -= OnWalkOutComplete;
             }
+            if (tutorialManager != null)
+                tutorialManager.OnTutorialComplete -= OnTutorialComplete;
         }
     }
 }

@@ -20,10 +20,25 @@ namespace CEOGame.UI
 
         string[] lines;
         int currentLine;
+        bool isTutorialMode;
+        System.Action onTutorialEnd;
 
         void Awake()
         {
             nextButton.onClick.AddListener(AdvanceLine);
+        }
+
+        public void ShowTutorial(Sprite portrait, string speakerName, string[] dialogueLines, System.Action onEnd)
+        {
+            gameObject.SetActive(true);
+            isTutorialMode = true;
+            onTutorialEnd = onEnd;
+            lines = dialogueLines;
+            currentLine = 0;
+            if (portrait != null) portraitImage.sprite = portrait;
+            nameText.text = speakerName;
+            outcomeText.text = "";
+            ShowCurrentLine();
         }
 
         public void ShowRequest(RequestData request)
@@ -49,6 +64,14 @@ namespace CEOGame.UI
         {
             dialogueText.text = lines != null && lines.Length > 0 ? lines[currentLine] : "";
 
+            if (isTutorialMode)
+            {
+                approveButton.gameObject.SetActive(false);
+                denyButton.gameObject.SetActive(false);
+                nextButton.gameObject.SetActive(true);
+                return;
+            }
+
             bool isLast = lines == null || lines.Length == 0 || currentLine >= lines.Length - 1;
             approveButton.gameObject.SetActive(isLast);
             denyButton.gameObject.SetActive(isLast);
@@ -56,6 +79,19 @@ namespace CEOGame.UI
 
         void AdvanceLine()
         {
+            if (isTutorialMode)
+            {
+                if (lines == null || currentLine >= lines.Length - 1)
+                {
+                    onTutorialEnd?.Invoke();
+                    onTutorialEnd = null;
+                    return;
+                }
+                currentLine++;
+                ShowCurrentLine();
+                return;
+            }
+
             if (lines == null || currentLine >= lines.Length - 1) return;
             currentLine++;
             ShowCurrentLine();
@@ -79,6 +115,8 @@ namespace CEOGame.UI
 
         public void Clear()
         {
+            isTutorialMode = false;
+            onTutorialEnd = null;
             lines = null;
             currentLine = 0;
             dialogueText.text = "";

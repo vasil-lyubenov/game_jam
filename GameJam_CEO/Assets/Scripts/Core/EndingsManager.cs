@@ -20,9 +20,9 @@ namespace CEOGame.Core
             // Starting: budget=100000, morale=80, people=30
             int statsUp = 0;
             int statsDown = 0;
-            if (gs.budget >= 120000) statsUp++;   else if (gs.budget < 80000) statsDown++;
-            if (gs.morale >= 96)    statsUp++;   else if (gs.morale < 64)    statsDown++;
-            if (gs.people >= 36)    statsUp++;   else if (gs.people < 24)    statsDown++;
+            if (gs.budget >= 110000) statsUp++;   else if (gs.budget < 90000) statsDown++;
+            if (gs.morale >= 88)    statsUp++;   else if (gs.morale < 72)    statsDown++;
+            if (gs.people >= 33)    statsUp++;   else if (gs.people < 27)    statsDown++;
 
             if (statsUp >= 2)   return EndingType.Good;
             if (statsDown >= 2) return EndingType.Bad;

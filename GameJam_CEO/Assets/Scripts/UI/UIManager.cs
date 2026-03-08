@@ -194,6 +194,7 @@ namespace CEOGame.UI
 
         void OnTutorialLastLineNext()
         {
+            requestPanel.Clear();
             if (employeeAnimator != null)
                 employeeAnimator.PlayWalkOut();
             else

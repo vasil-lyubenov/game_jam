@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ralitsa
   m_EditorClassIdentifier: Assembly-CSharp::CEOGame.Data.EmployeeData
   employeeName: "\u0420\u0430\u043B\u0438\u0446\u0430"
-  portrait: {fileID: 6613966997347658515, guid: b4fdff29dc1c74bf0a81bf1f831edc75, type: 3}
+  portrait: {fileID: 21300000, guid: 95822afe90ea944a19edf98a16741651, type: 3}
   personalityBio: "\u0414\u044A\u0440\u0436\u0438 \u0444\u0438\u0440\u043C\u0430\u0442\u0430
     \u0434\u0430 \u043D\u0435 \u0441\u0435 \u0440\u0430\u0437\u043F\u0430\u0434\u043D\u0435.
     \u0413\u043E\u0432\u043E\u0440\u0438 \u0431\u044A\u0440\u0437\u043E, \u043D\u043E

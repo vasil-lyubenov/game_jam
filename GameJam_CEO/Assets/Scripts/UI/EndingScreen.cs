@@ -32,19 +32,32 @@ namespace CEOGame.UI
         [TextArea(3, 6)]
         public string[] endingTexts =
         {
-            "Отказа на Гинка имаше последствия. Тя напусна. А след нея — и съпругът й.",
-            "Бюджетът падна, хората се разочароваха. Компанията фалира.",
-            "Поредния ден в матрицата...",
-            "Айде хабиби! Компанията процъфтява и екипът е по-силен от всякога."
+            "Гинка изпадна в тежка депресия и цялата фирма усети как без нея всичко се разпада.",
+            "Разходите те настигнаха, хората се демотивираха и проектът се разпадна.",
+            "Просто още един ден, който минава и не оставя следа.",
+            "Решенията ти вдигнаха морала и стабилизираха компанията."
+        };
+
+        [Header("Ending Texts Panel 2 — index order: VeryBad=0, Bad=1, Neutral=2, Good=3")]
+        [TextArea(3, 6)]
+        public string[] endingTexts2 =
+        {
+            "Мъжът на Гинка дойде в офиса… и всичко завърши с фатален край…",
+            "Без пари и без екип, компанията обявява фалит, а ти оставаш само с празен офис и лоши решения.",
+            "Утре пак същото. И вдругиден. И до пенсия.",
+            "Празнувате успеха с тиймбилдинг в Дубай и всички говорят за следващия проект с усмивка."
         };
 
         public string[] endingTitles =
         {
             "Отмъщението за Гинка",
-            "Ще се ходи в борсата",
+            "Краят на бюджета",
             "Какъв е смисъла в живота?",
-            "Тиймбийдинг в Дубай"
+            "Добре дошли в Дубай"
         };
+
+
+        private int _currentIdx;
 
         void Awake()
         {
@@ -57,7 +70,8 @@ namespace CEOGame.UI
         {
             panel.SetActive(true);
 
-            int idx = (int)ending; // VeryBad=0, Bad=1, Neutral=2, Good=3
+            _currentIdx = (int)ending;
+            int idx = _currentIdx; // VeryBad=0, Bad=1, Neutral=2, Good=3
 
             if (panel1Sprites != null && idx < panel1Sprites.Length && panel1Sprites[idx] != null)
                 panel1Image.sprite = panel1Sprites[idx];
@@ -91,6 +105,8 @@ namespace CEOGame.UI
                 yield return null;
             }
             panel2Group.alpha = 1f;
+            advanceButton.interactable = false;
+            endingText.text = (endingTexts2 != null && _currentIdx < endingTexts2.Length) ? endingTexts2[_currentIdx] : "";
 
             playAgainButton.gameObject.SetActive(true);
         }

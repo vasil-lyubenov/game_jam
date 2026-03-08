@@ -85,6 +85,7 @@ namespace CEOGame.UI
             if (hrTipPanel != null)
                 hrTipPanel.useTipButton.onClick.AddListener(OnHRTipClicked);
             menuButton.onClick.AddListener(OnMenuClicked);
+            pauseMenuPanel.resumeButton.onClick.AddListener(OnMenuClicked);
             charshaButton.onClick.AddListener(() => {
                 AudioManager.Instance?.PlayCompanySheet();
                 companyPanel.Toggle();
@@ -273,11 +274,21 @@ namespace CEOGame.UI
         IEnumerator ShowOutcomeThenWalkOut()
         {
             Debug.Log("[UIManager] ShowOutcomeThenWalkOut: waiting 2s...");
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(5f);
             Debug.Log("[UIManager] ShowOutcomeThenWalkOut: wait complete, starting walk out");
+
+            // Hide tip bubble when walk-out starts, not when it ends
+            if (hrTipPanel != null)
+            {
+                hrTipPanel.HideTipBubble();
+            }
+
+            // Hide outcome text when walk-out starts
+            //requestPanel.outcomeText.text = "";
 
             if (employeeAnimator != null)
             {
+                requestPanel.Clear();
                 employeeAnimator.PlayWalkOut();
             }
             else
@@ -294,13 +305,15 @@ namespace CEOGame.UI
             // Hide toggle panels between requests
             employeeInfoPanel.gameObject.SetActive(false);
             companyPanel.gameObject.SetActive(false);
-            if (hrTipPanel != null)
-                hrTipPanel.HideTipBubble();
 
             if (tutorialManager != null && tutorialManager.TutorialActive)
+            {
                 tutorialManager.EndTutorial(); // fires OnTutorialComplete → BuildQueue + ServeNextRequest
+            }
             else
+            {
                 requestManager.ServeNextRequest();
+            }
         }
 
         void OnGameOver()
@@ -314,11 +327,13 @@ namespace CEOGame.UI
             if (pauseMenuPanel.IsVisible)
             {
                 pauseMenuPanel.Hide();
+                Time.timeScale = 1f;
                 turnManager.Resume();
             }
             else
             {
                 pauseMenuPanel.Show();
+                Time.timeScale = 0f;
                 turnManager.Pause();
             }
         }

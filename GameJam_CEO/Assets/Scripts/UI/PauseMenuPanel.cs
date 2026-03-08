@@ -14,8 +14,10 @@ namespace CEOGame.UI
         void Awake()
         {
             panel.SetActive(false);
-            resumeButton.onClick.AddListener(Hide);
-            restartButton.onClick.AddListener(() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex));
+            restartButton.onClick.AddListener(() => {
+                Time.timeScale = 1f;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            });
             quitButton.onClick.AddListener(Application.Quit);
         }
 

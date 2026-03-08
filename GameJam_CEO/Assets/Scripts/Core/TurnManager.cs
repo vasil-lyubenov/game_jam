@@ -6,7 +6,7 @@ namespace CEOGame.Core
     public class TurnManager : MonoBehaviour
     {
         [Header("Settings")]
-        public float dayDuration = 20f;
+        public float dayDuration = 100f;
 
         float timeRemaining;
         bool timerRunning;

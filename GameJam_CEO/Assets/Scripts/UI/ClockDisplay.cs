@@ -9,7 +9,7 @@ namespace CEOGame.UI
     {
         [SerializeField] RectTransform hourHand;
         [SerializeField] RectTransform minuteHand;
-        [SerializeField] float hourStartAngle = -240f;  // 8 o'clock position
+        [SerializeField] float hourStartAngle = 0f;  // 9 o'clock position (hand sprite points to 9 at 0°)
 
         [Header("Clock Face")]
         [SerializeField] Image clockFaceImage;

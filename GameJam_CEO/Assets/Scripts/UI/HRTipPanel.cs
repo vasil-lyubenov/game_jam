@@ -22,14 +22,14 @@ namespace CEOGame.UI
 
         public void ShowEmployee(EmployeeData employee, int tipsRemaining)
         {
-            tipsRemainingText.text = $"Tips: {tipsRemaining}";
+            tipsRemainingText.text = $"x{tipsRemaining}";
             HideTipBubble();
             useTipButton.interactable = tipsRemaining > 0 && !string.IsNullOrEmpty(employee.hrTip);
         }
 
         public void ShowTipBubble(string tipText, int tipsRemaining)
         {
-            tipsRemainingText.text = $"Tips: {tipsRemaining}";
+            tipsRemainingText.text = $"x{tipsRemaining}";
             if (tipBubble != null) tipBubble.SetActive(true);
             if (tipBubbleText != null) tipBubbleText.text = tipText;
             useTipButton.interactable = false;

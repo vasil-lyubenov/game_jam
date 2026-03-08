@@ -613,9 +613,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CEOGame.UI.ClockDisplay
   hourHand: {fileID: 3193120138703979441}
   minuteHand: {fileID: 7621906020349359653}
-  minuteRotations: 1
-  hourStartAngle: -270
-  hourTotalArc: 240
+  hourStartAngle: 0
   clockFaceImage: {fileID: 0}
   dayCycleManager: {fileID: 4962821870640226779}
   morningSprite: {fileID: 0}
@@ -646,13 +644,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2926493541892357833}
-  m_LocalRotation: {x: 0, y: 0, z: -0.8526401, w: 0.5224987}
+  m_LocalRotation: {x: 0, y: 0, z: -0.23344536, w: 0.97236997}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3193120138703979441}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -117}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -27}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 3.23732, y: 8.120605}

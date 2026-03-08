@@ -57,6 +57,7 @@ namespace CEOGame.UI
             nameText.text = employee.employeeName;
             outcomeText.text = "";
 
+            nextButton.interactable = true;
             ShowCurrentLine();
         }
 
@@ -99,18 +100,20 @@ namespace CEOGame.UI
 
         public void ShowOutcome(string text)
         {
-            approveButton.interactable = false;
-            denyButton.interactable = false;
-            //nextButton.gameObject.SetActive(false);
+            nextButton.interactable = false;
+            approveButton.gameObject.SetActive(false);
+            denyButton.gameObject.SetActive(false);
             outcomeText.text = text;
         }
 
         public void SkipToLastLine()
         {
-            if (lines == null || lines.Length == 0) return;
+            if (lines == null || lines.Length == 0)
+            {
+                return;
+            }
             currentLine = lines.Length - 1;
             ShowCurrentLine();
-            nextButton.gameObject.SetActive(false);
         }
 
         public void Clear()

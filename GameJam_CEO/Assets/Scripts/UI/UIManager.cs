@@ -123,6 +123,7 @@ namespace CEOGame.UI
             }
             else
             {
+                // No tutorial — build queue and serve first request (timer starts in ShowPendingRequest)
                 requestManager.BuildQueue();
                 requestManager.ServeNextRequest();
             }
@@ -137,10 +138,7 @@ namespace CEOGame.UI
 
         void OnTimerTick(float seconds)
         {
-            clockDisplay.UpdateClock(seconds, turnManager.dayDuration);
-
-            if (dayCycleManager != null)
-                dayCycleManager.UpdatePhase(seconds, turnManager.dayDuration);
+            clockDisplay.UpdateClock(requestManager.CompletedRequests, turnManager.ElapsedFraction);
         }
 
         void OnTimeUp()
@@ -148,11 +146,13 @@ namespace CEOGame.UI
             // Skip to last dialogue line and show approve/deny buttons
             requestPanel.SkipToLastLine();
 
-            // Disable all UI except approve/deny
-            requestPanel.nextButton.gameObject.SetActive(false);
+            // Disable non-decision buttons (visible but greyed out)
+            requestPanel.nextButton.interactable = false;
             charshaButton.interactable = false;
             vizitkaButton.interactable = false;
             menuButton.interactable = false;
+            if (hrTipPanel != null)
+                hrTipPanel.useTipButton.interactable = false;
         }
         void OnDayEnded() { }
 
@@ -204,7 +204,6 @@ namespace CEOGame.UI
             Debug.Log("[UIManager] OnTutorialComplete — starting real game");
             requestManager.BuildQueue();
             requestManager.ServeNextRequest();
-            // ServeNextRequest → OnRequestServed → walk in → ShowPendingRequest → ResetTimer
         }
 
         void ShowPendingRequest()
@@ -213,15 +212,25 @@ namespace CEOGame.UI
             currentRequest = pendingRequest;
             pendingRequest = null;
 
-            // Re-enable UI buttons for the new request
+            // Always re-enable side buttons so player can view employee info
             charshaButton.interactable = true;
             vizitkaButton.interactable = true;
             menuButton.interactable = true;
+            requestPanel.nextButton.interactable = true;
 
-            // Reset per-request timer
+            // Start a fresh 20s timer for this request
             turnManager.ResetTimer();
 
+            // Advance day cycle based on request count
+            if (dayCycleManager != null)
+                dayCycleManager.NotifyRequestShown();
+
             requestPanel.ShowRequest(currentRequest);
+
+            // If time is already up, skip dialogue and show approve/deny immediately
+            //if (timeUp)
+            //    requestPanel.SkipToLastLine();
+
             employeeInfoPanel.ShowEmployee(currentRequest.requestingEmployee, currentRequest);
             companyPanel.ShowForEmployee(currentRequest.requestingEmployee);
             if (hrTipPanel != null)
@@ -241,13 +250,14 @@ namespace CEOGame.UI
             if (currentRequest == null) return;
             Debug.Log($"[UIManager] OnPlayerDecision: approved={approved}, request={currentRequest.name}");
 
-            // Re-enable UI buttons after decision
+            // Keep side buttons enabled so player can still view info
             charshaButton.interactable = true;
             vizitkaButton.interactable = true;
             menuButton.interactable = true;
 
-            // Stop timer (will be reset on next request)
+            // Pause timer during decision processing
             turnManager.Pause();
+            requestPanel.nextButton.interactable = false;
 
             decisionProcessor.ProcessDecision(currentRequest, approved);
         }

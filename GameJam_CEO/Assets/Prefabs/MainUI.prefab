@@ -613,7 +613,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CEOGame.UI.ClockDisplay
   hourHand: {fileID: 3193120138703979441}
   minuteHand: {fileID: 7621906020349359653}
-  minuteRotations: 3
+  minuteRotations: 1
   hourStartAngle: -270
   hourTotalArc: 240
   clockFaceImage: {fileID: 0}
@@ -2728,8 +2728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db852023ba6ad44998226c1d341d775c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CEOGame.Core.DayCycleManager
-  middayThreshold: 0.33
-  sunsetThreshold: 0.66
+  requestsPerPhase: 3
 --- !u!114 &2826378761701828053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2847,7 +2846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba5ce93b7c39346078a40979d6051314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CEOGame.Core.TurnManager
-  dayDuration: 100
+  dayDuration: 20
 --- !u!114 &346211720819804820
 MonoBehaviour:
   m_ObjectHideFlags: 0

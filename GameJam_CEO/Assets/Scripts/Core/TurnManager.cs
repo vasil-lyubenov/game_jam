@@ -6,7 +6,7 @@ namespace CEOGame.Core
     public class TurnManager : MonoBehaviour
     {
         [Header("Settings")]
-        public float dayDuration = 100f;
+        public float dayDuration = 20f;
 
         float timeRemaining;
         bool timerRunning;
@@ -15,6 +15,8 @@ namespace CEOGame.Core
         public float DayDuration => dayDuration;
         public float TimeRemaining => timeRemaining;
         public bool TimerRunning => timerRunning;
+        public bool TimeIsUp => timeUpFired;
+        public float ElapsedFraction => 1f - (timeRemaining / dayDuration);
 
         public event Action<float> OnTimerTick;
         public event Action OnTimeUp;
@@ -22,7 +24,7 @@ namespace CEOGame.Core
         void Start()
         {
             timeRemaining = dayDuration;
-            timerRunning = true;
+            timerRunning = false;
             timeUpFired = false;
             OnTimerTick?.Invoke(timeRemaining);
         }
@@ -54,6 +56,10 @@ namespace CEOGame.Core
         }
 
         public void Pause() => timerRunning = false;
-        public void Resume() => timerRunning = true;
+        public void Resume()
+        {
+            if (!timeUpFired)
+                timerRunning = true;
+        }
     }
 }

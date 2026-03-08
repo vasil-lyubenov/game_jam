@@ -14,6 +14,13 @@ namespace CEOGame.Core
         Queue<RequestData> currentQueue = new();
         public RequestData CurrentRequest { get; private set; }
 
+        int totalRequests;
+        int completedRequests;
+        bool initialQueueBuilt;
+
+        public int TotalRequests => totalRequests;
+        public int CompletedRequests => completedRequests;
+
         public event Action<RequestData> OnRequestServed;
         public event Action OnNoMoreRequests;
 
@@ -27,6 +34,13 @@ namespace CEOGame.Core
                 .ToList();
 
             currentQueue = new Queue<RequestData>(eligible);
+
+            if (!initialQueueBuilt)
+            {
+                totalRequests = eligible.Count;
+                completedRequests = 0;
+                initialQueueBuilt = true;
+            }
         }
 
         public void ServeNextRequest()
@@ -36,6 +50,7 @@ namespace CEOGame.Core
             if (currentQueue.Count > 0)
             {
                 CurrentRequest = currentQueue.Dequeue();
+                completedRequests++;
                 OnRequestServed?.Invoke(CurrentRequest);
             }
             else

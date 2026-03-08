@@ -9,9 +9,7 @@ namespace CEOGame.UI
     {
         [SerializeField] RectTransform hourHand;
         [SerializeField] RectTransform minuteHand;
-        [SerializeField] int minuteRotations = 3;
-        [SerializeField] float hourStartAngle = -270f;  // 9 o'clock position
-        [SerializeField] float hourTotalArc = 240f;     // 9 AM → 5 PM (8 hours on 12-hour face)
+        [SerializeField] float hourStartAngle = -240f;  // 8 o'clock position
 
         [Header("Clock Face")]
         [SerializeField] Image clockFaceImage;
@@ -22,23 +20,20 @@ namespace CEOGame.UI
 
         TimeOfDay lastPhase = (TimeOfDay)(-1);
 
-        public void UpdateClock(float timeRemaining, float dayDuration)
+        public void UpdateClock(int completedRequests, float timerFraction)
         {
-            float elapsed = dayDuration - timeRemaining;
-            float fraction = Mathf.Clamp01(elapsed / dayDuration);
-
-            // Hour hand: starts at 9 o'clock, sweeps clockwise to 5 o'clock
-            float hourAngle = hourStartAngle - fraction * hourTotalArc;
+            // Hour hand: base position from completed requests + smooth offset from current timer
+            float hourAngle = hourStartAngle - ((completedRequests - 1) * 30f + timerFraction * 30f);
             hourHand.localRotation = Quaternion.Euler(0f, 0f, hourAngle);
 
-            // Minute hand: multiple full rotations over the day
-            float minuteAngle = -fraction * 360f * minuteRotations;
+            // Minute hand: one full 360° rotation per request
+            float minuteAngle = -timerFraction * 360f;
             minuteHand.localRotation = Quaternion.Euler(0f, 0f, minuteAngle);
 
             // Update clock face sprite based on time-of-day phase
             if (dayCycleManager != null && clockFaceImage != null)
             {
-                TimeOfDay phase = dayCycleManager.GetPhaseForTime(timeRemaining, dayDuration);
+                TimeOfDay phase = dayCycleManager.CurrentPhase;
                 if (phase != lastPhase)
                 {
                     lastPhase = phase;

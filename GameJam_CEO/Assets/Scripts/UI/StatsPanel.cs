@@ -11,9 +11,9 @@ namespace CEOGame.UI
 
         public void UpdateStats(int budget, int morale, int people)
         {
-            budgetText.text = $"Budget: ${budget}";
-            moraleText.text = $"Morale: {morale}%";
-            peopleText.text = $"People: {people}";
+            budgetText.text = $"{budget:N0}€";
+            moraleText.text = $"{morale}%";
+            peopleText.text = $"{people}";
         }
     }
 }

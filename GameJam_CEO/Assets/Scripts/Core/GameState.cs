@@ -13,9 +13,9 @@ namespace CEOGame.Core
         public EmployeeData[] allEmployees;
 
         [Header("Starting Values")]
-        public int budget = 1000;
-        public int morale = 70;
-        public int people = 45;
+        public int budget = 100000;
+        public int morale = 80;
+        public int people = 30;
         public bool gameOver;
 
         [Header("Decision History")]
@@ -37,16 +37,10 @@ namespace CEOGame.Core
 
         public void ApplyStatChanges(int budgetDelta, int moraleDelta, int peopleDelta)
         {
-            budget = Mathf.Clamp(budget + budgetDelta, 0, 9999);
+            budget = Mathf.Clamp(budget + budgetDelta, 0, 999999);
             morale = Mathf.Clamp(morale + moraleDelta, 0, 100);
             people = Mathf.Max(people + peopleDelta, 0);
             OnStatsChanged?.Invoke(budget, morale, people);
-
-            if (budget <= 0 || morale <= 0 || people <= 0)
-            {
-                gameOver = true;
-                OnGameOver?.Invoke();
-            }
         }
 
         public void RecordDecision(RequestData request, bool approved)

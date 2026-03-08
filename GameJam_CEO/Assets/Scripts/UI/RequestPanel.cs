@@ -40,7 +40,7 @@ namespace CEOGame.UI
             if (employee.portrait != null)
                 portraitImage.sprite = employee.portrait;
             nameText.text = employee.employeeName;
-            // outcomeText.text = "";
+            outcomeText.text = "";
 
             ShowCurrentLine();
         }
@@ -66,7 +66,7 @@ namespace CEOGame.UI
             approveButton.interactable = false;
             denyButton.interactable = false;
             //nextButton.gameObject.SetActive(false);
-            //outcomeText.text = text;
+            outcomeText.text = text;
         }
 
         public void SkipToLastLine()

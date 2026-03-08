@@ -20,8 +20,10 @@ MonoBehaviour:
   position: 1
   team: 0
   salary: 3000
-  happiness: 55
-  goodRelationships: []
+  happiness: 100
+  goodRelationships:
+  - {fileID: 11400000, guid: 7d75337f66f464c209f0a01d1e6dae7a, type: 2}
+  - {fileID: 11400000, guid: 7bad95179dd30402abb9453cfd0ce88e, type: 2}
   neutralRelationships:
   - {fileID: 11400000, guid: 090f5a01e56de4955ac5d7bdaf91323f, type: 2}
   badRelationships:
@@ -29,6 +31,23 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 039d614cce97640dbb80a4f82fe61e3e, type: 2}
   - {fileID: 11400000, guid: 8106f398099a9406fa9e194b4ed0508a, type: 2}
   - {fileID: 11400000, guid: c085baf3773dd4e9b82e013b989d1ac3, type: 2}
+  - {fileID: 11400000, guid: 36574fd850532445898a0b5ff4580753, type: 2}
+  - {fileID: 11400000, guid: 17351a82d6e244f75989077cc2356892, type: 2}
+  - {fileID: 11400000, guid: fb9306b256a0641a790fdec22a93d408, type: 2}
+  - {fileID: 11400000, guid: 94a5bde054b9346068abb75ba7d067b6, type: 2}
+  - {fileID: 11400000, guid: 09a486867ee7944e9954484af740f625, type: 2}
+  - {fileID: 11400000, guid: 1e869337319f2475898d133dd93c725c, type: 2}
+  - {fileID: 11400000, guid: 3f387f44e839a4b81ae0d47655893517, type: 2}
+  - {fileID: 11400000, guid: 64649dd5fb9ad44f68091ba19f9a58e2, type: 2}
+  - {fileID: 11400000, guid: 26f0deee76d114b5ebd3362dd930785f, type: 2}
+  - {fileID: 11400000, guid: 0a1015daa4c024ac590d74c2d78e8eaa, type: 2}
+  - {fileID: 11400000, guid: 50aa557cdd858411dac3e173774c5157, type: 2}
+  - {fileID: 11400000, guid: 8869ddeb616844dbd954a35a0f3449e9, type: 2}
+  - {fileID: 11400000, guid: ef7f7aeba573043fa9b285ad3bc1f6ea, type: 2}
+  - {fileID: 11400000, guid: 3263bf7ebdf35455b85470de593dcdad, type: 2}
+  - {fileID: 11400000, guid: 9e0643d182eae4b52b3e9af08116981e, type: 2}
+  - {fileID: 11400000, guid: 8106f398099a9406fa9e194b4ed0508a, type: 2}
+  - {fileID: 11400000, guid: 4f6d88e7961734b699a4c35c56f29585, type: 2}
   hrTip: "\u041F\u043E\u0432\u0435\u0447\u0435\u0442\u043E \u0445\u043E\u0440\u0430
     \u043D\u0435 \u0433\u043E \u043F\u043E\u043D\u0430\u0441\u044F\u0442. \u0418\u043C\u0430
     \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u0438 \u0441 \u0430\u043B\u043A\u043E\u0445\u043E\u043B\u0430
